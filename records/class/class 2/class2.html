@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher & Student record</title>
+  <link rel="stylesheet" href="../class 1/class1.css">
+</head>
+<body>
+  <header>
+    <div class="class-info">
+      <h1>Ms Jane Smith</h1>
+      <p>Class 2 Record</p>
+    </div>
+    <nav class="nav-button">
+      <ul>
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../class 1/class1.html">Class 1</a></li>
+        <li><a href="../class 2/class2.html">Class 2</a></li>
+        <li><a href="../class 3/class3.html">Class 3</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="add">
+      <h2>Add Student Record</h2>
+      <div class="add-form" id="add-student-form">
+        <label class="name" for="student-name">Student Name:</label>
+        <input type="text" id="student-name" placeholder="Student Name">
+
+        <label class="DOB" for="student-DOB">D.O.B:</label>
+        <div class="date">
+          <input type="date" id="student-DOB" placeholder="Student D.O.B">
+        </div>
+        
+
+        <label class="gender" for="gender">Gender:</label>
+        <select name="gender" id="gender-option">
+          <option value="null"></option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+        <button id="button">Add Student</button>
+      </div>
+    </section>
+
+    <section class="details">
+      <h1>Student Details</h1>
+      <!-- Student details will be displayed here -->
+      <div class="details-heading">
+        <p>Name</p>
+        <p>Date of Birth</p>
+        <p>Gender</p>
+      </div>
+
+      <div class="record active" id="record1">
+
+      </div>
+    </section>
+
+    <button id="clear-button">Clear List</button>
+  </main>
+
+  <script type="module" src="class2.js"></script>
+</body>
+</html>
