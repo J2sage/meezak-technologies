@@ -1,0 +1,451 @@
+*{
+  margin: 0;
+  padding: 0;
+  /* box-sizing: border-box; */
+}
+body{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+nav ul{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 1%;
+  background-color: rgb(147, 214, 212);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.logo{
+  margin-right: auto;
+  width: 120px;
+}
+.logo img{
+  width: 100%;
+}
+nav li{
+  list-style: none;
+  padding: 25px 15px;
+  font-size: 15px;
+  transition: text-decoration 0.5s;
+}
+nav li.active{
+  text-decoration: underline;
+  text-underline-offset: 35px;
+  text-decoration-thickness: 3px;
+  text-decoration-color: black;
+}
+nav li:hover{
+  text-decoration: underline;
+  text-underline-offset: 35px;
+  text-decoration-thickness: 3px;
+  text-decoration-color: black;
+}
+nav a{
+  text-decoration: none;
+  color: white;
+  transition: color 0.5s;
+  font-weight: 600;
+}
+nav a:hover{
+  text-decoration: none;
+  color: black;
+}
+.menu-nav{
+  display: none;
+}
+
+.dropDown{
+  position: relative;
+}
+.brand-tab{
+  display: none;
+  background-color: white;
+  padding: 15px 5%;
+  color: black;
+  position: absolute;
+  width: 260px;
+  top: 76px;
+  left: -50%;
+  z-index: 10;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.brand-tab li{
+  font-size: 17px;
+  margin: 5px auto;
+  list-style: none;
+  cursor: pointer;
+}
+.brand-tab li:hover{
+  text-decoration: none;
+}
+.dropDown:hover .brand-tab{
+  display: block;
+}
+
+.side-bar{
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 220px;
+  align-items: flex-start;
+  backdrop-filter: blur(10px);
+  background-color: rgba(147, 214, 212, 0.372);
+  padding-top: 10px;
+  padding: 15px 25px;
+}
+.side-bar li{
+  list-style: none;
+  padding: 15px 3%;
+  width: 100%;
+  cursor: pointer;
+}
+.side-bar li:hover{
+  text-decoration: none;
+  background-color: rgba(62, 80, 79, 0.2);
+}
+.side-bar a{
+  text-decoration: none;
+  color: black;
+}
+
+main{
+  margin-top: 20px;
+}
+.main-image{
+  width: 100%;
+  object-fit: contain;
+
+}
+.brand-menu{
+  background-color: rgb(245, 245, 245);
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 5%;
+}
+.brand-menu img{
+  width: 15%;
+  max-width: 150px;
+}
+.introduction,
+.team-introduction{
+  display: flex;
+  padding: 70px 5%;
+}
+.about-mssg{
+  width: 50%;
+  margin: auto;
+  margin-left: 20px;
+  margin-top: 0;
+  padding-right: 30px;
+}
+.about-mssg h1{
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+.about-mssg p{
+  font-size: 17px;
+  line-height: 1.6;
+  margin-bottom: 60px;
+}
+.about-mssg button{
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: rgb(147, 214, 212);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.abbout-video{
+  width: 30%;
+}
+.about-video video{
+  width: 100%;
+  height: 400px;
+}
+.gallery{
+  text-align: center;
+  background-color: #40403F;
+  padding: 40px 5%;
+  color: white;
+  margin: auto;
+  /* height: 620px; */
+  /* margin-bottom: 8%; */
+}
+.gallery h1{
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+.gallery-images{
+  display: grid;
+  grid-template-areas: 
+    "img1 img2 img3 img4"
+    "img5 img5 img6 img6"
+  ;
+  gap: 15px;
+}
+.gallery-1{grid-area: img1;}
+.gallery-2{grid-area: img2;}
+.gallery-3{grid-area: img3;}
+.gallery-4{grid-area: img4;}
+.gallery-5{grid-area: img5;}
+.gallery-6{grid-area: img6;}
+
+.gallery-1,.gallery-2,.gallery-3,.gallery-4{
+  width: 100%;
+  height: 100%;
+}
+.gallery-5,.gallery-6{
+  width: 100%;
+  height: 100%;
+}
+.team-introduction{
+  background-color: rgb(245, 245, 245);
+}
+.about-team-img{
+  width: 50%;
+}
+.about-team-img img{
+  width: 90%;
+}
+.media{
+  padding: 50px 5%;
+  text-align: center;
+}
+.media h1{
+  font-size: 40px;
+  margin-bottom: 30px;
+  color: rgb(147, 214, 212);
+}
+.media video{
+  border: 2px solid black;
+  width: 90%;
+  margin: auto;
+  border-radius: 20px;
+}
+.media-link{
+  background-color: rgb(147, 214, 212);
+  padding: 30px 10%;
+}
+.top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.top p{
+  font-size: 38px;
+  color: white;
+  font-weight: 600;
+}
+.bottom{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+.bottom img{
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.company-details{
+  background-color: rgb(245, 245, 245);
+  padding: 30px 3%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #40403F;
+}
+.info{
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.gofoodcart-logo{
+  width: 180px;
+  margin-bottom: 40px;
+}
+.info a:first-of-type{
+  width: 80%;
+}
+.info a:hover{
+  color: black;
+}
+.company-details a{
+  cursor: pointer;
+  transition: color 0.3s ease;
+  text-decoration: none;
+  color: #40403F;
+}
+.company-details a:hover{
+  color: rgb(147, 214, 212);
+}
+.company-details li{
+  list-style: none;
+}
+.brands{
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.brands h1,
+.links h1,
+.download-link h1{
+  margin-bottom: 30px;
+}
+.links{
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.download-link{
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.download-link img{
+  width: 200px;
+  cursor: pointer;
+  
+}
+footer{
+  padding: 20px 5%;
+  background-color: rgb(245, 245, 245);
+}
+footer > p{
+  color: #40403F;
+  text-align: center;
+  padding: 50px 5%;
+  font-size: 15px;
+}
+.footer-text span{
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.footer-text span:hover{
+  color: rgb(147, 214, 212);
+}
+
+@media (max-width: 458px) {
+  
+  .introduction,
+  .team-introduction{
+    display: flex;
+    flex-direction: column;
+  }
+  .about-mssg{
+    width: 100%;
+  }
+  .about-mssg h1{
+    font-size: 32px;
+  }
+  .about-mssg p{
+    font-size: 15px;
+  }
+  .abbout-video{
+    width: 100%;
+    padding: 0 15%;
+  }
+  .about-video video{
+    width: 100%;
+    height: auto;
+    margin-top: 15px; 
+  }
+  .gallery{
+    height: 100%;
+    padding: 50px 5%;
+    margin-bottom: 0;
+  }
+  .gallery-images{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 80%;
+    margin: auto;
+  }
+  .gallery-1,
+  .gallery-2,
+  .gallery-3,
+  .gallery-4{
+    width: 80%;
+    height: 80%;
+  }
+  .gallery-5,
+  .gallery-6{
+    width: 100%;
+    height: 100%;
+  }
+  .team-introduction{
+    margin-top: 0;
+  }
+  .about-team-img{
+    width: 100%;
+    padding: 20px 5%;
+  }
+  .top{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .top p{
+    font-size: 28px;
+  }
+  .bottom img{
+    display: none;
+  }
+  .bottom img:first-of-type{
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+}
+@media (max-width: 768px) {
+  .hide-nav{
+    display: none;
+  }
+  .menu-nav{
+    display: block;
+  }
+  .bottom img{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .company-details{
+    display: flex;
+    flex-direction: column;
+  }
+  .info,
+  .brands,
+  .links,
+  .download-link{
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .info a:first-of-type{
+    width: 100%;
+  }
+  .gofoodcart-logo{
+    width: 130px;
+    margin-bottom: 40px;
+  }
+  .top p{
+    width: 40%;
+  }
+}

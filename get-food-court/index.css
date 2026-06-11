@@ -1,0 +1,611 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body{
+  font-family: Montserrat, sans-serif;
+}
+.nav-bar{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 15px 3%;
+  background: linear-gradient(90deg, rgba(147, 214, 212, 0.202) 0%, rgba(214, 147, 147, 0.202) 100%);
+  backdrop-filter: blur(100px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  box-shadow: 0 4px 30px -10px rgba(0, 0, 0, 0.1);
+}
+.nav-bar li{
+  list-style: none;
+}
+.nav-bar a{
+  text-decoration: none;
+  color: black;
+}
+.left-side{
+  margin-right: auto;
+}
+.left-side  a{
+  font-weight: 600;
+  font-size: 20px;
+  color: rgb(230, 0, 0);
+  cursor: pointer;
+  font-weight: 800;
+  cursor: pointer;
+}
+.middle-side-container{
+  margin-right: auto;
+}
+.middle-side {
+  display: flex;
+  gap: 25px;
+  margin-right: auto;
+}
+.middle-side a{
+  cursor: pointer;
+  font-size: 11px;
+}
+.right-side{
+  display: flex;
+  gap: 20px;
+}
+.fa-brands{
+  background-color: white;
+  padding: 7px 20px;
+  padding-left: 5px;
+  border-radius: 20px;
+  align-items: center;
+  font-size: 13px;
+  cursor: pointer;
+  align-content: center;
+}
+.menu-icon, .close-icon{
+  align-content: center;
+  display: none;
+}
+.close-icon{
+  background-color: white;
+}
+.side-bar{
+  position: fixed;
+  top: 58px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  padding: 20px 4%;
+  display: none;
+  flex-direction: column;
+  gap: 1.4em;
+  z-index: 20;
+}
+.side-bar li{
+  list-style: none;
+}
+.side-bar a{
+  text-decoration: none;
+  color: white;
+  font-size: 17px;
+  font-weight: 500;
+}
+main{
+  margin-top: 80px;
+}
+.main-page{
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  background-color: white;
+  padding-top: 45px;
+}
+.main-page h1{
+  font-size: 40px;
+  width: 30%;
+  margin: auto;
+  line-height: 1.3;
+  margin-bottom: 15px;
+}
+.instruction{
+  width: 30%;
+  margin: auto;
+}
+.download-link-image{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 45px;
+  margin-bottom: 15px;
+}
+.download-link-image > a:hover{
+  width: calc(150px - 5px);
+  height: calc(100% - 5px);
+}
+.download-link-image > a{
+  display: flex;
+  gap: 5px;
+  background-color: black;
+  width: 150px;
+  padding: 10px 1%;
+  border-radius: 5px;
+  text-decoration: none;
+  color: white;
+  transition: width 0.3s ease;
+}
+.combinator{
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  width: 165px;
+  margin: auto;
+  padding: 10px 5px;
+  border-radius: 10px;
+  color: orange;
+  font-size: 10px;
+}
+.combinator span{
+  background-color: orange;
+  color: white;
+  padding: 3px 7px;
+  border-radius: 8px;
+}
+.main-page video{
+  width: 55%;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 50px;
+}
+.advertisment-text-marquee{
+  background-color: #52af2f;
+}
+.advertisment-text{
+  display: flex;
+  padding: 5px 1em;
+  gap: 1.5em;
+}
+.advertisment-text p{
+  flex: 0 0 10px;
+  color: white;
+  text-wrap: nowrap;
+  font-size: 10px ;
+}
+.advertisment h1{
+  font-size: 25px;
+  width: 30%;
+  margin: auto;
+  line-height: 1.3;
+  text-align: center;
+  margin-top: 45px;
+}
+.advertisment>p{
+  text-align: center;
+  margin-top: 15px;
+  text-wrap: nowrap;
+  overflow: hidden;
+}
+
+.carousel-container,
+.carousel-container-two{
+  display: flex;
+  width: 100%;
+  margin: 10px 0;
+  overflow-x: auto;
+  padding: 10px;
+}
+.carousel-container::-webkit-scrollbar,
+.carousel-container-two::-webkit-scrollbar{
+  display: none;
+}
+.carousel-advertisment-catalogue{
+  display: flex;
+  gap: 1em;
+  animation: spin 10s linear infinite;
+}
+.carousel-catalogue{
+  width: 250px;
+  height: 150px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  background-color: white;
+  padding: 7px;
+  border-radius: 5px;
+}
+.carousel-catalogue img{
+  width: 100%;
+  height: 60%;
+  border-radius: 5px;
+  object-fit: cover;
+  object-position: center;
+}
+.carousel-catalogue p{
+  font-size: 10px;
+  color: #333;
+}
+.carousel-catalogue p:first-of-type{
+  font-weight: 600;
+  color: black;
+  margin-bottom: 5px;
+}
+@keyframes spin {
+  from{translate: 0;}
+  to{translate: -100%;}
+}
+
+
+.see-all-link{
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 30px;
+  text-decoration: none;
+  background-color: rgb(230, 0, 0);
+  color: white;
+  width: 10%;
+  padding: 10px 1%;
+  border-radius: 20px;
+  margin-bottom: 40px;
+}
+.see-all-link:hover{
+  opacity: 0.8;
+}
+.product-display h1{
+  padding: 0 5%;
+}
+.carousel-container-two{
+  width:90%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+.advertisment-catalogue{
+  display: flex;
+  gap: 1em;
+  padding: 10px 1em;
+  animation: spin 10s linear infinite alternate-reverse;
+}
+@keyframes spin {
+  from{translate: 0;}
+  to{translate: -40%;}
+}
+.catalogue{
+  flex: 0 0 270px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  padding: 7px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+}
+.catalogue img{
+  width: 100%;
+  height: 100px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  object-position: center;
+  object-fit: cover;
+}
+.catalogue p{
+  font-size: 10px;
+  color: #333;
+}
+.catalogue p:first-of-type{
+  font-weight: 600;
+  color: black;
+  margin-bottom: 5px;
+}
+.catalogue-mini-container p:last-of-type{
+  margin-bottom: 90px;
+}
+.catalogue-mini-container a{
+  border: 1px solid rgb(230, 0, 0);
+  display: flex;
+  justify-content: center;
+  width: 40%;
+  padding: 10px 1%;
+  margin: auto;
+  border-radius: 20px;
+  text-decoration: none;
+  color: rgb(230, 0, 0);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.catalogue-mini-container a:hover{
+  color: white;
+  background-color: rgb(230, 0, 0);
+}
+.chef-section{
+  background-color: rgb(255, 219, 219);
+  padding: 50px 5%;
+}
+.chef-section h1{
+  font-size: 25px;
+  width: 30%;
+  margin: auto;
+  line-height: 1.3;
+  text-align: center;
+}
+.chef-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  width: 50%;
+  margin: auto;
+  background-color: white;
+  margin-top: 50px;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+.chef-info img{
+  width: 50%;
+  height: 50%;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 15px;
+}
+.chef-details h2{
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 5px;
+}
+.chef-position{
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 15px;
+}
+.chef-bio{
+  font-size: 10px;
+  color: #555;
+  width: 90%;
+  line-height: 1.8;
+}
+
+.feedback-container{
+  background-color: rgb(243 244 246);
+  padding: 40px 0;
+}
+.feedback-container h1{
+  width: 300px;
+  margin-bottom: 15px;
+  margin: 0 2%;
+}
+.feedback-container > p{
+  margin-bottom: 30px;
+  margin: 0 2%;
+}
+.feedback-container span{
+  color: #f87171;
+}
+marquee{
+  width: 100%;
+}
+.top-comment, .bottom-comment{
+  display: flex;
+  gap: 1em;
+  padding: 10px 0;
+}
+
+.comment-card{
+  flex: 0 0 280px;
+  /* width: 280px; */
+  background-color: white;
+  padding: 10px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: rgb(75 85 99 );
+  border-radius: 10px;
+  font-size: 13px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+}
+.comment-card p{
+  text-wrap: wrap;
+}
+.profile{
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.profile img{
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 25px;
+}
+
+footer{
+  background-color: black;
+  padding: 50px 5%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 16px;
+  color: #40403F;
+}
+footer li{
+  list-style: none;
+  margin-bottom: 15px;
+}
+footer a{
+  text-decoration: none;
+  color: white;
+  font-size: 11px;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+footer a:hover{
+  text-decoration: underline;
+  color: rgb(0, 60, 255);
+}
+.contact-info,
+.company-details{
+  margin-right: 5%;
+  width: 15%;
+}
+.locations,
+.restaurants{
+  margin-right: 1%;
+  width: 35%;
+}
+.contact-info h1{
+  font-size: 20px;
+  margin-bottom: 25px;
+  color: white;
+}
+.contact-info h2{
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: white;
+}
+.locations,
+.restaurant{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.company-details h1,
+.locations h1,
+.restaurant h1{
+  font-size: 12px;
+  margin-bottom: 25px;
+  color: white;
+}
+.location-mini-container,
+.restaurant-mini-container{
+  display: flex;
+  gap: 25%;
+  width: 100%;
+}
+@media (max-width: 768px){
+  .right-side, .middle-side{
+    display: none;
+  }
+  .menu-icon{
+    display: block;
+  }
+  .main-page{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    background-color: white;
+    padding-top: 10px;
+  }
+  .main-page h1{
+    font-size: 25px;
+    width: 100%;
+    margin: auto;
+    line-height: 1.3;
+    margin-bottom: 15px;
+  }
+  .main-page video{
+    width: 99%;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 50px;
+  }
+  .chef-info{
+    width: 80%;
+  }
+
+  footer{
+    display: grid;
+    grid-template-areas: 
+    'item1 item2'
+    'item3 item3'
+    'item4 item4'
+    ;
+  }
+  .contact-info{grid-area: item1;}
+  .company-details{grid-area: item2;}
+  .locations{grid-area: item3;}
+  .restaurant{grid-area: item4;}
+
+  .contact-info{
+    width: 100%;
+  }
+  .company-details{
+    width: 100%;
+    text-wrap: nowrap;
+    margin-left: 20rem;
+  }
+  .locations{
+    width: 100%;
+    text-wrap: nowrap;
+  }
+  .locations h1,
+  .restaurant  h1{
+    margin-left: 80px;
+    margin-bottom: 0px;
+    margin-top: 10px;
+  }
+  .right-location-mini-container{
+    margin-left: 16rem;
+  }
+}
+@media (max-width: 600px) {
+  .advertisment h1{
+    font-size: 15px;
+    width: 90%;
+  }
+  .see-all-link{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-top: 30px;
+    text-decoration: none;
+    background-color: rgb(230, 0, 0);
+    color: white;
+    width: 40%;
+    padding: 10px 1%;
+    border-radius: 20px;
+    margin-bottom: 40px;
+  }
+  .advertisment-catalogue{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 10px 1em;
+    animation: none;
+  }
+  .chef-section h1{
+    font-size: 20px;
+    width: 100%;
+    margin: auto;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .chef-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
+    width: 90%;
+    margin: auto;
+    background-color: white;
+    margin-top: 50px;
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
+  .chef-info img{
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .chef-bio{
+    font-size: 10px;
+    color: #555;
+    width: 100%;
+  }
+  footer{
+    display: flex;
+    flex-direction: column;
+  }
+   .company-details{
+    margin-top: 15px;
+    margin-left: 0;
+  }
+  .right-location-mini-container{
+    margin-left: 5rem;
+  }
+}
