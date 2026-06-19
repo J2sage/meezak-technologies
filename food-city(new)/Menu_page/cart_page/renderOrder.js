@@ -13,7 +13,7 @@ export function updateCart(){
     cartHTML += `
       <div class="cart" data-product-id='${matchingProduct.id}'>
         <div class="product-info">
-          <img src="${matchingProduct.image}">
+          <img src="../${matchingProduct.image}" alt="${matchingProduct.name}">
           <div class="text">
             <p class="name">${matchingProduct.name}</p>
             <p class="stock">In stock</p>
