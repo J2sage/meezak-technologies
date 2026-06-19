@@ -12,52 +12,52 @@ export function getProduct(productId) {
 
 export const foods = [{
   id: '01',
-  image: '/Menu_page/ASSETS/foodcard1.webp',
+  image: 'assets/foodcard1.webp',
   name: 'Fried Rice',
   price: 3500
 },{
   id: '02',
-  image: '/Menu_page/ASSETS/foodcard2.webp',
+  image: 'assets/foodcard2.webp',
   name: "City's special rice",
   price: 4500
 },{
   id: '03',
-  image: '/Menu_page/ASSETS/foodcard3.webp',
+  image: 'assets/foodcard3.webp',
   name: 'Singaporean noodles',
   price: 4000
 },{
   id: '04',
-  image: '/Menu_page/ASSETS/foodcard4.webp',
+  image: 'assets/foodcard4.webp',
   name: "Grandma's Special Rice",
   price: 4500
 },{
   id: '05',
-  image: '/Menu_page/ASSETS/foodcard5.webp',
+  image: 'assets/foodcard5.webp',
   name: 'Village Rice',
   price: 4500
 },{
   id: '06',
-  image: '/Menu_page/ASSETS/foodcard6.webp',
+  image: 'assets/foodcard6.webp',
   name: 'Jollof Rice',
   price: 3500
 },{
   id: '07',
-  image: '/Menu_page/ASSETS/foodcard7.webp',
+  image: 'assets/foodcard7.webp',
   name: 'Basmatic Jollof Rice',
   price: 4800
 },{
   id: '08',
-  image: '/Menu_page/ASSETS/foodcard8.webp',
+  image: 'assets/foodcard8.webp',
   name: 'Ofada Rice & Sauce',
   price: 8400
 },{
   id: '09',
-  image: '/Menu_page/ASSETS/foodcard9.webp',
+  image: 'assets/foodcard9.webp',
   name: 'Yam',
   price: 1500
 },{
   id: '10',
-  image: '/Menu_page/assets/foodcard10.webp',
+  image: 'assets/foodcard10.webp',
   name: 'Yam Porridge',
   price: 3000
 }];

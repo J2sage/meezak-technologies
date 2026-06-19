@@ -80,10 +80,9 @@ nav a:hover {
   top: 100px;
   right: 0;
   background-color: white;
-  padding: 30px 0px;
+  padding: 50px 0px;
   margin-right: 5%;
-  width: 80%;
-  height: 220px;
+  width: 100%;
   max-width: 300px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: none;
@@ -298,28 +297,28 @@ main{
   position: relative;
 }
 .food-con-one{
-  background-image: url('./ASSETS/ASUN.jpg');
+  background-image: url('assets/ASUN.jpg');
   flex: 1;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 .food-con-two{
-  background-image: url('./ASSETS/Yam-_-Egg-sauce.jpg');
+  background-image: url('assets/Yam-_-Egg-sauce.jpg');
   flex: 1;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 .food-con-three{
-  background-image: url('./ASSETS/foodcity-center.jpg');
+  background-image: url('assets/foodcity-center.jpg');
   flex: 1;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 .food-con-four{
-  background-image: url('./ASSETS/foodcity-footerr.png');
+  background-image: url('assets/foodcity-footerr.png');
   flex: 1;
   background-repeat: no-repeat;
   background-size: cover;
@@ -479,7 +478,7 @@ main{
 }
 .location-image{
   width: 70%;
-  background-image: url('./ASSETS/foode-4.png');
+  background-image: url('assets/foode-4.png');
   background-repeat: no-repeat;
   background-size: 110%;
   background-position: center;
@@ -505,7 +504,7 @@ main{
   background-size: 130%;
 }
 .Booking{
-  background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('./ASSETS/foodcity-footerr.png');
+  background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('assets/foodcity-footerr.png');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
