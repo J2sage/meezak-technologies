@@ -1,210 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> food city NG</title>
-    <link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Food-city</title>
+	<link rel="shortcut icon" href="../Main_page/icons/foodcityng_logo.jpg" sizes="532x32" type="image/x-icon">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="../Main_page/footer.css">
+	<link rel="stylesheet" href="responsiveness.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- <input type="color"> -->
-    <header class="head">
-        <div class="first_head">
-            <img src="ASSETS/foodcity logo2.webp" alt="" width="50px">
-            <h1>FoodCity NG</h1>
-            <input type="text" placeholder="Search Items">
+	<header class="head">
+		<section class="first_head">
+			<div class="logo">
+      	<a href="../Main_page/index.html"><img src="assets/foodcity-logo.png" alt="Food City Logo"></a>
+			</div>
+			<input type="search" placeholder="Search Items">
+			<ul>
+				<li><a href="#"><img src="./icons/info-icon.svg" alt=""> Info</a></li>
+				<li class="categories"><a href="#"><img src="./icons/categories-icon.svg" alt=""> Categories</a></li>
+				<li><a href="cart_page/cart.html"><img src="./icons/cart-icon.svg" alt="">Cart</a></li>
+				<li><a href="#"><img src="./icons/login-icon.svg" alt="">Login</a></li>
+			</ul>
+			<div class="sidebar-control">
+				<img src="icons/icon-hamburger.svg" id="menu" alt="menu-icon">
+				<img src="icons/icon-close.svg" id="close" alt="close-icon">
+			</div>
+		</section>
+		<div class="ham">
+      <ul class="small-nav">
+        <li><a href="/Main_page/index.html">HOME</a></li>
+        <li><a href="../Menu_page/index.html">MENU</a></li>
+        <li><a href="cart_page/cart.html">CART</a></li>
+        <li><a href="#">LOGIN</a></li>
+      </ul>
+    </div>
+	</header>
+	<div class="mini-search">
+		<input type="search" placeholder="Search Items">
+	</div>
+	<nav class="food_type">
+		<ul>
+			<li><a href="#">SCRUMPTIOUS BREA</a></li>
+			<li><a href="#">GRAINS</a></li>
+			<li><a href="#">AFRICANA</a></li>
+			<li><a href="#">PROTEINS</a></li>
+			<li><a href="#">PASTERIES & CAKES</a></li>
+			<li><a href="#">SIDES</a></li>
+			<li><a href="#">SOUPS</a></li>
+			<li><a href="#">PACKAGING</a></li>
+		</ul>
+  </nav>
+	<main>
+		<section class="grid">
+			<div class="grid_head">
+				<h1>All Items</h1>
+				<div class="head_btn">
+					<p><span>GRID VIEW</span><img src="./icons/grid-icon.svg" alt=""></p>
+					<p><span>RECOMMENDED</span><img src="./icons/rec-icon.svg" alt=""></p>
+				</div>
+			</div>
+			<div class="grid_cards">
+				
+			</div>
+		</section>
 
-            <ul>
-                <li><img src="./icons/info-icon.svg" alt=""> Info</li>
-                <li><img src="./icons/categories-icon.svg" alt=""> Categories</li>
-                <li><img src="./icons/cart-icon.svg" alt="">Cart</li>
-                <li> <img src="./icons/login-icon.svg" alt="">Login</li>
-            </ul>
-        </div>
-
-
-    </header>
-
-    <nav class="nav_list">
-        <ul>
-            <li><a href="../Main-Page/index.html">HOME</a></li>
-            <li>SCRUMPTIOUS BREA</li>
-            <li>GRAINS</li>
-            <li>AFRICANA</li>
-            <li>PROTEINS</li>
-            <li>PASTERIES & CAKES</li>
-            <li>SIDES</li>
-            <li>SOUPS</li>
-            <li>PACKAGING</li>
-            <li>ABOUT</li>
-        </ul>
-    </nav>
-
-    <section>
-        <div class="sec_image">
-            <img src="ASSETS/foodcity pge2 food.webp" >
-        </div>
-
-        <div class="sec_con">
-            <div class="sec_con-head">
-                <h1>All Items</h1>
-                </div>
-            <div class="sec_con-btn">
-                <p style="width: 110px; height: 5vh;"><img src="./icons/grid-icon.svg" alt="">GRID VIEW</p>
-                <p style="width: 150px; height: 5vh;"><img src="./icons/rec-icon.svg" alt="">RECOMMENDED</p>
-            </div>
-        </div>
-
-        <div class="cards">
-            <div class="card1">
-                <img src="ASSETS/foodcard1.webp" width="250px" height="250px">
-                <p>Fried Rice</p>
-                <h3>₦350 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-             <div class="card1">
-                <img src="ASSETS/foodcard2.webp" width="250px" height="250px">
-                <p>City's special rice</p>
-                <h3>₦450 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-             <div class="card1">
-                <img src="ASSETS/foodcard3.webp" width="250px" height="250px">
-                <p>Singaporean noodles</p>
-                <h3>₦400 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-             <div class="card1">
-                <img src="ASSETS/foodcard4.webp" width="250px" height="250px">
-                <p>Grandma's Special Rice</p>
-                <h3>₦450 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            <div class="card1">
-                <img src="ASSETS/foodcard5.webp" width="250px" height="250px">
-                <p>Village Rice</p>
-                <h3>₦450 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            <div class="card1">
-                <img src="ASSETS/foodcard6.webp" width="250px" height="250px">
-                <p>Jollof Rice</p>
-                <h3>₦350 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            <div class="card1">
-                <img src="ASSETS/foodcard7.webp" width="250px" height="250px">
-                <p>Basmatic Jollof Rice</p>
-                <h3>₦480 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            <div class="card1">
-                <img src="ASSETS/foodcard8.webp" width="250px" height="250px">
-                <p>Ofada Rice & Sauce</p>
-                <h3>₦840 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            <div class="card1">
-                <img src="ASSETS/foodcard9.webp" width="250px" height="250px">
-                <p>Yam</p>
-                <h3>₦150 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            <div class="card1">
-                <img src="ASSETS/foodcard10.webp" width="250px" height="250px">
-                <p>Yam Porridge</p>
-                <h3>₦300 <span>per scoop</span></h3>
-                <button>Add to Cart</button>
-
-            </div>
-            
-            
-        </div>
-
-        <div class="last_div">
-            - That's all -
-        </div>
-        
+		<section class="Booking">
+      <h1>Book A Reservation</h1>
+      <p>
+        You don't want to have your group wait on an open table when they arrive?, then our reservation is the best option
+      </p>
+      <button type="button" class="last-button">BOOK YOUR SEATS</button>
     </section>
-    <footer>
-        <div class="footer-con">
-            <div class="footer-con-child">
-                <div class="foot-one">
-                    <img src="./ASSETS/foodcity logo2.webp" alt="" height="100px" width="100px">
-                    <div class="foot-txt">
-                        <h3>Foodcity NG</h3>
-                        <p>
-                          Your Family, friends & you deserve the tastiest Mama-style food at the classiest & most imaginative place. We do that by giving you good food enjoyed at our classy & imaginative ambiance topped with fun-filled experiences. Enjoy good life with good food!
-                        </p>
-                    </div>
-                   
-                </div>
-                <div class="foot-two">
-                    <div class="foot-two-child">
-                        <span class="footer-span">
-                            <img src="./icons/home-icon.svg" alt="">
-                            <h5>Back to Home</h5>
-                        </span>
-                        <p>Our Website</p>
-                    </div>
-                    <div class="foot-two-child">
-                        <span class="footer-span">
-                            <img src="./icons/food-icon.svg" alt="">
-                            <h5>View Menu</h5>
-                        </span>
-                        <p>Create Your Combo With Our Menu</p>
-                    </div>
-                    <div class="foot-two-child">
-                        <span class="footer-span">
-                            <img src="./icons/turkey-icon.svg" alt="">
-                            <h5>Chat Your Meal Manager</h5>
-                        </span>
-                        <p>
-                            we're here for you
-                        </p>
-                    </div>
-                </div>
-            </div>
-           
-            <div class="foot-three">
-                <div class="footer-soc">
-                    <img src="./icons/facebook-icon.svg" alt="">
-                    <img src="./icons/IG-icon.svg" alt="">
-                </div>
-                <div class="footer-flag">
-                    <span class="flag-con">
-                        <img src="./icons/flag-icon.svg" alt="">
-                        <p>English</p>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="bottom-con">
-            <p>FoodCity NG, LOCATION 🍗 245 ipaja Road, ipaja | 0811 700 0803 🍗 208 Rbgeda idimu road opposite NNPC, close to twins faja Egbeda | 09047616756 🍗 134 Cele-Egbe Rd, Isolo-Ikotun, Opp. GTB, Near IKEDC. | 09152291665 🍗 Lawanson Rd,Opp. Access Bank, Surulere, Lagos| 
-            </p>
-        </div>
-        <div class="footer-logo">
-            <p>Powered By</p>
-            <img src="./ASSETS/footer2logo.webp" alt="">
-            <p>Version 6.28.9</p>
-        </div>
-        
-    </footer>
 
-<div class="whatsapp-con">
-    <img src="./icons/whatsapp.svg" alt="" class="whatsapp">
-</div>
-   
+	</main>
 
-   
+	<footer class="home_footer">
+    <div class="left-footer">
+      <img src="./ASSETS/foodcity-logo.png" width="150px">
+      <p>Restaurant beyond the ordinary</p>
+      <div class="icon">
+        <img src="../Main_page/icons/fb-icon.svg" alt="">
+        <img src="../Main_page/icons/ig-icon copy.svg" alt="">
+        <img src="../Main_page/icons/what-icon.svg" alt="">    
+      </div>
+    </div>
+    <div class="right-footer">
+      <h3>Contact</h3>
+      <p>9, Babatunde Oki St., Town planning way, Ilupeju.</p>
+      <p>+(234) 811 700 0803</p>
+      <p><a href="info@foodcityng.com">info@foodcityng.com</a></p>
+    </div>
+  </footer>
+
+	<script type="module" src="script/menu.js"></script>
+	<!-- <script type="module" src="script/cart.js"></script> -->
 </body>
 </html>
