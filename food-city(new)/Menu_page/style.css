@@ -69,6 +69,19 @@ header{
 	font-size: 1.1rem;
   cursor: pointer;
 }
+.cart{
+	position: relative;
+}
+#cart-quantity{
+	position: absolute;
+	background-color: orangered;
+	color: white;
+	width: 25px;
+	text-align: center;
+	border-radius: 50%;
+	right: -10px;
+	top: -5px;
+}
 .categories{
 	display: none;
 }
@@ -184,7 +197,7 @@ main{
 	flex-wrap: wrap;
 	gap: 2rem;
 	row-gap: 5em;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
 	margin: 20px auto 60px;
 }
@@ -193,7 +206,7 @@ main{
 	/* align-items: center; */
 	justify-content: space-between;
 	flex-direction: column;
-	width: 220px;
+	width: 250px;
 	border: 3px solid orangered;
 	border-radius: 10px;
 	padding: 10px 0;
@@ -236,6 +249,20 @@ main{
 }
 .card1 button:hover{
 	opacity: 0.7;
+}
+.not-available{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.not-available img{
+	width: 30%;
+	min-width: 200px;
+}
+.not-available p{
+	font-size: 1.5em;
+	margin-top: 20px;
 }
 .Booking{
   background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('../Main_page/assets/foodcity-footerr.png');

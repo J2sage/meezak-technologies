@@ -83,23 +83,96 @@ if (cartBody) {
 
     if (deleteBtn) {
       const productId = deleteBtn.dataset.productId;
+      const matchingItem = getProduct(productId);
+      document.body.classList.add('no-scroll');
+      const backdrop =  document.querySelector('.remove-container-backdrop');
+      backdrop.classList.add('show');
+      if (!matchingItem) return;
+      
+      let removeContainerHTML;
+
+      removeContainerHTML = `
+        <h3>Remove item from cart</h3>
+        <hr>
+        <p>Do you wish to remove this item from your cart?</p>
+        <div class="remove-img-container">
+          <img src="../${matchingItem.image}" alt="food-image" class="remove-img">
+        </div>
+        <div class="confirmation">
+          <p class="cancel">No, Cancel</p>
+          <p class="confirm" data-product-id='${matchingItem.id}'>Yes, Remove</p>
+        </div>
+      `;
+      const removeContainer = document.querySelector('.remove-container');
+      
+      removeContainer.innerHTML = removeContainerHTML;
+      removeContainer.style.display = 'block';
+
+      const container = document.querySelector('.container');
+      if(container){
+        container.setAttribute('inert', '');
+      }
+      // delFromCart(productId);
+    }
+  });
+}
+
+const removeContainer = document.querySelector('.remove-container');
+if (removeContainer) {
+  removeContainer.addEventListener('click', (event) => {
+    const cancel = event.target.closest('.cancel');
+    const confirm = event.target.closest('.confirm');
+
+    document.body.classList.remove('no-scroll');
+
+    const backdrop =  document.querySelector('.remove-container-backdrop');
+    backdrop.classList.remove('show');
+
+    if (cancel) {
+      removeContainer.style.display = 'none';
+      const container = document.querySelector('.container');
+      if(container){
+        container.removeAttribute('inert');
+      }
+      return;
+    }
+
+    if (confirm) {
+      const productId = confirm.dataset.productId;
       delFromCart(productId);
+      removeContainer.style.display = 'none';
+
+      const container = document.querySelector('.container');
+      if(container){
+        container.removeAttribute('inert');
+      }
     }
   });
 }
 
 function delFromCart(productId){
+
   const index = cart.findIndex((item) => item.productId === productId);
   if (index !== -1) {
     cart.splice(index, 1);
     saveToStorage();
     updateCart();
+    updateCartQuantity();
   }
+}
+export function updateCartQuantity(params) {
+  let cartQuantitys = 0;
+  cart.forEach((item)=>{
+    cartQuantitys += item.quantity
+  });
+
+  const CQ = document.querySelector('#cart-quantity');
+    CQ.innerHTML = cartQuantitys;
 }
 
 function updateorderSummary(finalTotal){
   let shipping;
-  if(finalTotal > 10000 <= 0){
+  if(finalTotal > 10000 || finalTotal <= 0){
     shipping = 0;
   }else{
     shipping = 1000
