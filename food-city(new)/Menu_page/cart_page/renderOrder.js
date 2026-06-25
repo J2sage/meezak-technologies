@@ -19,13 +19,13 @@ export function updateCart(){
             <p class="stock">In stock</p>
           </div>
         </div>
-        <p class="price">₦${matchingProduct.price}</p>
+        <p class="price">₦${matchingProduct.price.toLocaleString()}</p>
         <div class="quantity">
           <img src="icon/decrease.png" class="decrease" data-product-id='${matchingProduct.id}' alt="decrease-png">
           ${cartItem.quantity}
           <img src="icon/increase.png" class="increase" data-product-id='${matchingProduct.id}' alt="increase-png">
         </div>
-        <p class="total">₦${quantityTotal}</p>
+        <p class="total">₦${quantityTotal.toLocaleString()}</p>
         <div class="delete-container">
           <img src="icon/icon-remove-item.png" class="delete" data-product-id='${matchingProduct.id}'>
         </div>
@@ -183,17 +183,17 @@ function updateorderSummary(finalTotal){
       <h3 class="summary">ORDER SUMMARY</h3>
       <hr class="summary-line">
       <p class="subtotal">
-        <b>Subtotal(₦) :</b> <span>${finalTotal}</span>
+        <b>Subtotal(₦) :</b> <span>${finalTotal.toLocaleString()}</span>
       </p>
       <p class="tax">
-        <b>Tax(10%)(₦) :</b> <span>${taxP}</span>
+        <b>Tax(10%)(₦) :</b> <span>${taxP.toLocaleString()}</span>
       </p>
       <p class="shipping">
         <b>Shipping(₦) :</b> <span>${shipping}</span>
       </p>
       <hr>
       <p class="afterTotal">
-        <b>Total(₦) :</b> <span>${finalTotal + taxP + shipping}</span>
+        <b>Total(₦) :</b> <span>${(finalTotal + taxP + shipping).toLocaleString()}</span>
       </p>
       <button type="button" class="checkout_btn">PROCEED TO CHECKOUT</button>
     </div>
