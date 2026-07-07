@@ -1,14 +1,12 @@
 @media (max-width: 900px) {
   .tab-links ul{
+    gap: 1em;
+    font-size: 0.8rem;
+  }
+   .tab-links .btn-1{
     display: none;
-  }
-  .sidebar-control{
-    display: flex;
-    margin-left: 2em;
-  }
-  #close{
-    display: none;
-  }
+   }
+  
   .hero{
     flex-direction: column-reverse;
   }
@@ -54,9 +52,23 @@
     transform: translate(-50%, -50%);
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 490px) {
   header .btn-1{
     display: none;
+  }
+  .tab-links ul{
+    display: none;
+  }
+  .sidebar-control{
+    display: flex;
+    margin-left: 2em;
+  }
+  #close{
+    display: none;
+  }
+  .ham{
+    margin: 0;
+    max-height: 100vh;
   }
   .hero{
     flex-direction: column-reverse;

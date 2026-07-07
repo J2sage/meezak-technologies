@@ -1,5 +1,33 @@
 import { getProduct } from "../script/food.js";
-export const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function getCurrentUser() {
+  try {
+    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function getCartStorageKey(user = getCurrentUser()) {
+  return user ? `cart:${user.username}` : 'cart:guest';
+}
+
+export let cart = [];
+
+export function loadCartForUser(user = getCurrentUser()) {
+  const key = getCartStorageKey(user);
+  const storedCart = JSON.parse(localStorage.getItem(key) || 'null');
+  cart = Array.isArray(storedCart) ? storedCart : [];
+  return cart;
+}
+
+export function saveCartForUser(user = getCurrentUser()) {
+  const key = getCartStorageKey(user);
+  localStorage.setItem(key, JSON.stringify(cart));
+  return cart;
+}
+
+loadCartForUser();
 
 export function updateCart(){
   let cartHTML = ``;
@@ -43,7 +71,7 @@ export function updateCart(){
 }
 
 export function saveToStorage() {
-  localStorage.setItem('cart', JSON.stringify(cart));
+  saveCartForUser(getCurrentUser());
 }
 
 if (document.readyState !== 'loading') {
@@ -138,10 +166,9 @@ if (removeContainer) {
     }
 
     if (confirm) {
+      removeContainer.style.display = 'none';
       const productId = confirm.dataset.productId;
       delFromCart(productId);
-      removeContainer.style.display = 'none';
-
       const container = document.querySelector('.container');
       if(container){
         container.removeAttribute('inert');
@@ -167,7 +194,11 @@ export function updateCartQuantity(params) {
   });
 
   const CQ = document.querySelector('#cart-quantity');
+  if(cartQuantitys === 0){
+    CQ.innerHTML = '';
+  }else{
     CQ.innerHTML = cartQuantitys;
+  }
 }
 
 function updateorderSummary(finalTotal){

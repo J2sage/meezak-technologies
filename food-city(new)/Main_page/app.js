@@ -2,7 +2,6 @@ const sideBar = document.getElementsByClassName('ham')[0];
 const menuBtn = document.getElementsByClassName('sidebar-control')[0];
 const menu = document.getElementById('menu');
 const closeBtn = document.getElementById('close');
-const logInBox = document.getElementsByClassName('login-box')[0];
 
 menuBtn.addEventListener('click', ()=>{
   if (menu.style.display !== 'none') {
@@ -48,36 +47,7 @@ if (reviewSection) {
   });
 }
 
-// login-control
 
-document.querySelectorAll('.log-in').forEach((logIn)=>{
-  logIn.addEventListener('click',()=>{
-    logInBox.style.display= 'flex';
-    document.querySelector('.remove-container-backdrop')
-      .classList.add('show');
-    document.body.classList.add('no-scroll');
-  })
-});
-document.querySelector('#login-close').addEventListener('click',()=>{
-  logInBox.style.display= 'none';
-  document.querySelector('.remove-container-backdrop')
-    .classList.remove('show');
-  document.body.classList.remove('no-scroll');
-});
-document.querySelector('.btn').addEventListener('click', ()=>{
-  logIn();
-})
-function logIn(){
-  const logInBox = document.querySelector('.login-box');
-  if(logInBox){
-    let name  = document.querySelector('.username').value;
-    document.querySelector('.login-span').innerHTML = name;
-    logInBox.style.display= 'none';
-    document.querySelector('.remove-container-backdrop')
-      .classList.remove('show');
-    document.body.classList.remove('no-scroll');
-  }
-}
 
 
 

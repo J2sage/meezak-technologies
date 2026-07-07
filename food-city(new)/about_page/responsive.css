@@ -1,13 +1,10 @@
 @media (max-width: 900px) {
   .tab-links ul{
-    display: none;
+    gap: 1em;
+    font-size: 0.8rem;
   }
-  .sidebar-control{
-    display: flex;
-    margin-left: 2em;
-  }
-  #close{
-    display: none;
+  .tab-links .btn-1{
+  display: none;
   }
 }
 
@@ -26,6 +23,16 @@
   }
 }
 @media (max-width: 500px) {
+  .tab-links ul{
+    display: none;
+  }
+  .sidebar-control{
+    display: flex;
+    margin-left: 2em;
+  }
+  #close{
+    display: none;
+  }
   .hero{
     text-align: center;
   }
