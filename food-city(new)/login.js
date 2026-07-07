@@ -2,6 +2,30 @@
 
 const logInBox = document.querySelector('.login-box');
 const backdrop = document.querySelector('.remove-container-backdrop');
+logInBox.innerHTML = `
+  <form action="">
+    <ion-icon name="close" id="login-close"></ion-icon>
+    <h2>Login</h2>
+    <div class="input-box">
+      <span class="icon"><ion-icon name="mail"></ion-icon></span>
+      <input class="username" type="text" required>
+      <label for="username">Username</label>
+    </div>
+    <div class="input-box">
+      <span class="icon"><ion-icon name="lock"></ion-icon></span>
+      <input type="password" class="password" required>
+      <label for="password">Password</label>
+    </div>
+    <div class="remember-forget">
+      <label><input type="checkbox">Remember me</label>
+      <a href="#">Forgot Password?</a>
+    </div>
+    <button type="submit" class="btn">Login</button>
+    <div class="register-link">
+      <p>Don't have an account <a href="#">Register</a></p>
+    </div>
+  </form>
+`;
 
 function openLoginModal(){
   if(logInBox){
