@@ -1,0 +1,26 @@
+@media (max-width: 768px) {
+  .side-bar ul li a{
+    font-size: 1rem;
+  }
+  .cart-item{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    row-gap: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid black;
+  }
+  .product-info{
+    flex-direction: column;
+    gap: 10px;
+  }
+  .product-info img{
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .side-bar ul li a{
+    flex-direction: column;
+    font-size: 0.9rem;
+  }  
+}

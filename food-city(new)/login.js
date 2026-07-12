@@ -1,32 +1,31 @@
-﻿import { loadCartForUser, saveCartForUser } from './Menu_page/cart_page/renderOrder.js';
-
-const logInBox = document.querySelector('.login-box');
+﻿const logInBox = document.querySelector('.login-box');
 const backdrop = document.querySelector('.remove-container-backdrop');
-logInBox.innerHTML = `
-  <form action="">
-    <ion-icon name="close" id="login-close"></ion-icon>
-    <h2>Login</h2>
-    <div class="input-box">
-      <span class="icon"><ion-icon name="mail"></ion-icon></span>
-      <input class="username" type="text" required>
-      <label for="username">Username</label>
-    </div>
-    <div class="input-box">
-      <span class="icon"><ion-icon name="lock"></ion-icon></span>
-      <input type="password" class="password" required>
-      <label for="password">Password</label>
-    </div>
-    <div class="remember-forget">
-      <label><input type="checkbox">Remember me</label>
-      <a href="#">Forgot Password?</a>
-    </div>
-    <button type="submit" class="btn">Login</button>
-    <div class="register-link">
-      <p>Don't have an account <a href="#">Register</a></p>
-    </div>
-  </form>
-`;
-
+if(logInBox){
+  logInBox.innerHTML = `
+    <form action="">
+      <ion-icon name="close" id="login-close"></ion-icon>
+      <h2>Login</h2>
+      <div class="input-box">
+        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+        <input class="username" type="text" required>
+        <label for="username">Username</label>
+      </div>
+      <div class="input-box">
+        <span class="icon"><ion-icon name="lock"></ion-icon></span>
+        <input type="password" class="password" required>
+        <label for="password">Password</label>
+      </div>
+      <div class="remember-forget">
+        <label><input type="checkbox">Remember me</label>
+        <a href="#">Forgot Password?</a>
+      </div>
+      <button type="submit" class="btn">Login</button>
+      <div class="register-link">
+        <p>Don't have an account <a href="#">Register</a></p>
+      </div>
+    </form>
+  `;
+}
 function openLoginModal(){
   if(logInBox){
     logInBox.style.display = 'flex';
@@ -51,8 +50,8 @@ function seedUsers(){
 
   const mockUsers = [
     { username: 'admin', password: '123', role: 'admin' },
-    { username: 'jibril', password: '123', role: 'customer' },
-    { username: 'balo', password: '456', role: 'customer' }
+    { username: 'jibril', password: '123', role: 'customer', fullName: 'Jibril Adebayo', email: 'jibril@example.com' },
+    { username: 'balo', password: '456', role: 'customer', fullName: 'Balo Johnson', email: 'balo@example.com' }
   ];
   localStorage.setItem('usersDB', JSON.stringify(mockUsers));
   return mockUsers;
@@ -77,19 +76,13 @@ function logIn(event){
   const foundUser = users.find((u) => u.username === name && u.password === password);
 
   if(foundUser){
-    const previousUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    if(previousUser){
-      saveCartForUser(previousUser);
-    }
-
     localStorage.setItem('currentUser', JSON.stringify(foundUser));
-    loadCartForUser(foundUser);
     updateLoginLabel(foundUser);
     closeLoginModal();
 
     const redirectPath = foundUser.role === 'admin'
       ? '../Main_page/admin.html'
-      : '../Main_page/index.html';
+      : '../dashboard/index.html';
 
     window.location.href = redirectPath;
   }else{
@@ -97,14 +90,10 @@ function logIn(event){
   }
 }
 
-function logOut(){
-  const currentUserToLogout = JSON.parse(localStorage.getItem('currentUser') || 'null');
-  if(currentUserToLogout){
-    saveCartForUser(currentUserToLogout);
-  }
+document.querySelector('.logout-btn')?.addEventListener('click', logOut);
 
+function logOut(){
   localStorage.removeItem('currentUser');
-  loadCartForUser(null);
   updateLoginLabel();
   window.location.href = '../Main_page/index.html';
 }
@@ -113,11 +102,7 @@ function logOut(){
 
 document.querySelectorAll('.log-in').forEach((logInButton) => {
   logInButton.addEventListener('click', () => {
-    if(!currentUser){
-      openLoginModal();
-    }else{
-      logOut();
-    }
+    openLoginModal();
   });
 });
 
@@ -126,6 +111,5 @@ document.querySelector('.login-box form')?.addEventListener('submit', logIn);
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 if(currentUser){
-  loadCartForUser(currentUser);
   updateLoginLabel(currentUser);
 }

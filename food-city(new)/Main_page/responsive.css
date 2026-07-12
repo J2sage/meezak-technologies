@@ -1,4 +1,7 @@
 @media (max-width: 900px) {
+  .logo img{
+    width: 100px;
+  }
   .tab-links ul{
     gap: 1em;
     font-size: 0.8rem;

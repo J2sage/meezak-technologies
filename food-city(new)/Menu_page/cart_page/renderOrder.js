@@ -1,33 +1,5 @@
 import { getProduct } from "../script/food.js";
-
-function getCurrentUser() {
-  try {
-    return JSON.parse(localStorage.getItem('currentUser') || 'null');
-  } catch {
-    return null;
-  }
-}
-
-function getCartStorageKey(user = getCurrentUser()) {
-  return user ? `cart:${user.username}` : 'cart:guest';
-}
-
-export let cart = [];
-
-export function loadCartForUser(user = getCurrentUser()) {
-  const key = getCartStorageKey(user);
-  const storedCart = JSON.parse(localStorage.getItem(key) || 'null');
-  cart = Array.isArray(storedCart) ? storedCart : [];
-  return cart;
-}
-
-export function saveCartForUser(user = getCurrentUser()) {
-  const key = getCartStorageKey(user);
-  localStorage.setItem(key, JSON.stringify(cart));
-  return cart;
-}
-
-loadCartForUser();
+export const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 export function updateCart(){
   let cartHTML = ``;
@@ -71,7 +43,7 @@ export function updateCart(){
 }
 
 export function saveToStorage() {
-  saveCartForUser(getCurrentUser());
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 if (document.readyState !== 'loading') {
