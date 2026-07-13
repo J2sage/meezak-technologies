@@ -1,6 +1,6 @@
-@media (max-width: 768px) {
+@media (max-width: 788px) {
   .side-bar ul li a{
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   main{
     padding: 1rem;

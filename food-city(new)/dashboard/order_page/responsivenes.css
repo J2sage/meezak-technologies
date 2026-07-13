@@ -1,6 +1,6 @@
-@media (max-width: 768px) {
+@media (max-width: 788px) {
   .side-bar ul li a{
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   .cart-item{
     display: flex;
@@ -8,14 +8,14 @@
     text-align: center;
     row-gap: 1em;
     padding-bottom: 1em;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgb(255, 129, 83);
   }
   .product-info{
     flex-direction: column;
     gap: 10px;
   }
   .product-info img{
-    width: 100%;
+    width: 80%;
   }
 }
 @media (max-width: 500px) {

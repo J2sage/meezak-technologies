@@ -62,6 +62,12 @@ function updateLoginLabel(user = null){
     span.textContent = user ? user.username : 'LOGIN';
   });
 }
+function updatedashBoardLabel(user = null){
+  document.querySelectorAll('.full-name').forEach((span) => {
+    console.log(user);
+    span.textContent = user ? user.fullName : '';
+  })
+}
 
 function logIn(event){
   event?.preventDefault();
@@ -78,6 +84,7 @@ function logIn(event){
   if(foundUser){
     localStorage.setItem('currentUser', JSON.stringify(foundUser));
     updateLoginLabel(foundUser);
+    updatedashBoardLabel(foundUser);
     closeLoginModal();
 
     const redirectPath = foundUser.role === 'admin'
@@ -85,6 +92,7 @@ function logIn(event){
       : '../dashboard/index.html';
 
     window.location.href = redirectPath;
+
   }else{
     alert('Invalid Credentials');
   }
@@ -95,14 +103,19 @@ document.querySelector('.logout-btn')?.addEventListener('click', logOut);
 function logOut(){
   localStorage.removeItem('currentUser');
   updateLoginLabel();
-  window.location.href = '../Main_page/index.html';
+  updatedashBoardLabel();
+  window.location.href = '../Main_page/index.html' 
 }
 
 // login-control
 
 document.querySelectorAll('.log-in').forEach((logInButton) => {
   logInButton.addEventListener('click', () => {
-    openLoginModal();
+    if (JSON.parse(localStorage.getItem('currentUser') || 'null')) {
+      window.location.href = '../dashboard/index.html';
+    }else{
+      openLoginModal();
+    }
   });
 });
 
@@ -112,4 +125,5 @@ document.querySelector('.login-box form')?.addEventListener('submit', logIn);
 const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 if(currentUser){
   updateLoginLabel(currentUser);
+  updatedashBoardLabel(currentUser);
 }

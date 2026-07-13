@@ -1,4 +1,5 @@
 import { getProduct } from "../script/food.js";
+import { updateDashboard, updateOrder } from "../../dashboard/dashboard.js";
 export const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 export function updateCart(){
@@ -8,7 +9,7 @@ export function updateCart(){
     const productId = cartItem.productId;
     const matchingProduct = getProduct(productId);
     if (!matchingProduct) return;
-    let quantityTotal = cartItem.quantity * matchingProduct.price
+    let quantityTotal = cartItem.quantity * matchingProduct.price;
 
     cartHTML += `
       <div class="cart" data-product-id='${matchingProduct.id}'>
@@ -40,6 +41,8 @@ export function updateCart(){
     container.innerHTML = cartHTML;
   }
   updateorderSummary(finalTotal);
+  updateDashboard();
+  updateOrder();
 }
 
 export function saveToStorage() {
