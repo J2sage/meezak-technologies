@@ -125,7 +125,6 @@ if (removeContainer) {
   removeContainer.addEventListener('click', (event) => {
     const cancel = event.target.closest('.cancel');
     const confirm = event.target.closest('.confirm');
-
     document.body.classList.remove('no-scroll');
 
     const backdrop =  document.querySelector('.remove-container-backdrop');
