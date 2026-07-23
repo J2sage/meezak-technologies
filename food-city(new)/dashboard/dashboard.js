@@ -58,3 +58,6 @@ export function updateOrder(){
   document.querySelector('.details') && (document.querySelector('.details')
     .innerHTML = orderHTML);
 }
+
+  const currentPath = window.location.pathname;
+  console.log(currentPath);

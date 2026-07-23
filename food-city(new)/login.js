@@ -1,5 +1,6 @@
 ﻿const logInBox = document.querySelector('.login-box');
 const backdrop = document.querySelector('.remove-container-backdrop');
+const menuLink = document.getElementById('menu-link');
 if(logInBox){
   logInBox.innerHTML = `
     <form action="">
@@ -69,6 +70,34 @@ function updatedashBoardLabel(user = null){
   })
 }
 
+function toggleMenuLink(user = null){
+  if(menuLink){
+    const shouldHide = !!user && user.role === 'admin';
+    menuLink.style.display = shouldHide ? 'none' : '';
+  }
+}
+
+function protectMenuPage(user = null){
+  const isMenuPage = window.location.pathname.includes('/Menu_page/');
+  if(isMenuPage && user?.role === 'admin'){
+    window.location.href = '../Main_page/admin_page/admin.html';
+  }
+}
+
+function redirectBasedOnRole(user){
+  if(!user){
+    return;
+  }
+
+  toggleMenuLink(user);
+
+  const redirectPath = user.role === 'admin'
+    ? '../Main_page/admin_page/admin.html'
+    : '../dashboard/index.html';
+
+  window.location.href = redirectPath;
+}
+
 function logIn(event){
   event?.preventDefault();
 
@@ -85,13 +114,9 @@ function logIn(event){
     localStorage.setItem('currentUser', JSON.stringify(foundUser));
     updateLoginLabel(foundUser);
     updatedashBoardLabel(foundUser);
+    toggleMenuLink(foundUser);
     closeLoginModal();
-
-    const redirectPath = foundUser.role === 'admin'
-      ? '../Main_page/admin_page/admin.html'
-      : '../dashboard/index.html';
-
-    window.location.href = redirectPath;
+    redirectBasedOnRole(foundUser);
 
   }else{
     alert('Invalid Credentials');
@@ -104,6 +129,7 @@ function logOut(){
   localStorage.removeItem('currentUser');
   updateLoginLabel();
   updatedashBoardLabel();
+  toggleMenuLink();
   const currentPath = window.location.pathname;
   if(currentPath === '/dashboard/index.html'){
     window.location.href = '../Main_page/index.html';
@@ -118,13 +144,20 @@ function logOut(){
 
 document.querySelectorAll('.log-in').forEach((logInButton) => {
   logInButton.addEventListener('click', () => {
-    if (JSON.parse(localStorage.getItem('currentUser') || 'null')) {
-      window.location.href = '../dashboard/index.html';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if(currentUser){
+      redirectBasedOnRole(currentUser);
     }else{
       openLoginModal();
     }
   });
 });
+
+// if (JSON.parse(localStorage.getItem('currentUser') || 'null')) {
+//       window.location.href = '../dashboard/index.html';
+//     }else{
+//       openLoginModal();
+//     }
 
 document.querySelector('#login-close')?.addEventListener('click', closeLoginModal);
 document.querySelector('.login-box form')?.addEventListener('submit', logIn);
@@ -133,4 +166,8 @@ const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 if(currentUser){
   updateLoginLabel(currentUser);
   updatedashBoardLabel(currentUser);
+  toggleMenuLink(currentUser);
+  protectMenuPage(currentUser);
+}else{
+  toggleMenuLink();
 }
