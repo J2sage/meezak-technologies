@@ -453,7 +453,9 @@ td {
     width: 100%;
     justify-content: center;
   }
-
+  main {
+    margin-top: 180px;
+  }
   .wrap {
     padding: 1rem;
   }
