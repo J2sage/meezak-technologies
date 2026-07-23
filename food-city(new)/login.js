@@ -124,19 +124,38 @@ function logIn(event){
 
 document.querySelector('.logout-btn')?.addEventListener('click', logOut);
 
+function getHomePagePath(){
+  const path = window.location.pathname.toLowerCase();
+
+  if(path.includes('/dashboard/order_page/')){
+    return '../../Main_page/index.html';
+  }
+
+  if(path.includes('/dashboard/')){
+    return '../Main_page/index.html';
+  }
+
+  if(path.includes('/main_page/admin_page/')){
+    return '../index.html';
+  }
+
+  if(path.includes('/main_page/')){
+    return 'index.html';
+  }
+
+  if(path.includes('/menu_page/')){
+    return '../Main_page/index.html';
+  }
+
+  return '../Main_page/index.html';
+}
+
 function logOut(){
   localStorage.removeItem('currentUser');
   updateLoginLabel();
   updatedashBoardLabel();
   toggleMenuLink();
-  
-  const redirects = {
-    '/dashboard/index.html': '../Main_page/index.html',
-    '/dashboard/order_page/order.html': '../../Main_page/index.html',
-    '/Main_page/admin_page/admin.html': '../index.html'
-  };
-
-   window.location.href = redirects[window.location.pathname] || '/meezak-technologies/food-city(new)/Main_page/index.html';
+  window.location.replace(getHomePagePath());
 }
 
 // login-control
