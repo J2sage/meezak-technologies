@@ -65,7 +65,6 @@ function updateLoginLabel(user = null){
 }
 function updatedashBoardLabel(user = null){
   document.querySelectorAll('.full-name').forEach((span) => {
-    console.log(user);
     span.textContent = user ? user.fullName : '';
   })
 }
@@ -137,7 +136,7 @@ function logOut(){
     '/Main_page/admin_page/admin.html': '../index.html'
   };
 
-   window.location.href = redirects[window.location.pathname] || '../index.html';
+   window.location.href = redirects[window.location.pathname] || '/meezak-technologies/food-city(new)/Main_page/index.html';
 }
 
 // login-control
