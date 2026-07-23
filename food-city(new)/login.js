@@ -130,14 +130,14 @@ function logOut(){
   updateLoginLabel();
   updatedashBoardLabel();
   toggleMenuLink();
-  const currentPath = window.location.pathname;
-  if(currentPath === '/dashboard/index.html'){
-    window.location.href = '../Main_page/index.html';
-  }else if(currentPath === '/dashboard/order_page/order.html'){
-    window.location.href = '../../Main_page/index.html';
-  }else if(currentPath === '/Main_page/admin_page/admin.html'){
-    window.location.href = '../index.html';
-  }
+  
+  const redirects = {
+    '/dashboard/index.html': '../Main_page/index.html',
+    '/dashboard/order_page/order.html': '../../Main_page/index.html',
+    '/Main_page/admin_page/admin.html': '../index.html'
+  };
+
+   window.location.href = redirects[window.location.pathname] || '../index.html';
 }
 
 // login-control
