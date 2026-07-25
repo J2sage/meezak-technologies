@@ -51,16 +51,16 @@
           <p>Manage menu items in your restaurant.</p>
         </div>
         <div class="page-actions">
-          <div class="search-group">
-            <input type="text" placeholder="Search menu items..." aria-label="Search menu items">
+          <div class="search-group" >
+            <input type="text" id="search-input" placeholder="Search menu items..." aria-label="Search menu items">
           </div>
           <div class="filter-group">
-            <select aria-label="Filter by category">
+            <select id="selectedCategory" aria-label="Filter by category">
               <option value="all">All Categories</option>
-              <option value="pizza">Pizza</option>
-              <option value="burgers">Burgers</option>
+              <option value="rice">Rice</option>
+              <option value="yam">Yam</option>
               <option value="drinks">Drinks</option>
-              <option value="desserts">Desserts</option>
+              <option value="noodles">Noodles</option>
             </select>
             <button class="secondary-btn">Filter</button>
           </div>
@@ -79,55 +79,8 @@
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="item-cell">
-                  <img class="item-avatar" src="../../Main_page/assets/icons/pizza.png" alt="Margherita Pizza">
-                  <div>
-                    <div class="item-name">Margherita Pizza</div>
-                    <div class="item-category">Pizza</div>
-                  </div>
-                </td>
-                <td>Pizza</td>
-                <td>$12.99</td>
-                <td><span class="status-badge available"><ion-icon name="checkmark-circle"></ion-icon> Available</span></td>
-                <td class="action-buttons">
-                  <button aria-label="Edit item"><ion-icon name="create"></ion-icon></button>
-                  <button aria-label="Delete item"><ion-icon name="trash"></ion-icon></button>
-                </td>
-              </tr>
-              <tr>
-                <td class="item-cell">
-                  <img class="item-avatar" src="../../Main_page/assets/icons/burger.png" alt="Classic Burger">
-                  <div>
-                    <div class="item-name">Classic Burger</div>
-                    <div class="item-category">Burgers</div>
-                  </div>
-                </td>
-                <td>Burgers</td>
-                <td>$9.49</td>
-                <td><span class="status-badge available"><ion-icon name="checkmark-circle"></ion-icon> Available</span></td>
-                <td class="action-buttons">
-                  <button aria-label="Edit item"><ion-icon name="create"></ion-icon></button>
-                  <button aria-label="Delete item"><ion-icon name="trash"></ion-icon></button>
-                </td>
-              </tr>
-              <tr>
-                <td class="item-cell">
-                  <img class="item-avatar" src="../../Main_page/assets/icons/pasta.png" alt="Chicken Alfredo Pasta">
-                  <div>
-                    <div class="item-name">Chicken Alfredo Pasta</div>
-                    <div class="item-category">Pasta</div>
-                  </div>
-                </td>
-                <td>Pasta</td>
-                <td>$11.99</td>
-                <td><span class="status-badge available"><ion-icon name="checkmark-circle"></ion-icon> Available</span></td>
-                <td class="action-buttons">
-                  <button aria-label="Edit item"><ion-icon name="create"></ion-icon></button>
-                  <button aria-label="Delete item"><ion-icon name="trash"></ion-icon></button>
-                </td>
-              </tr>
+            <tbody class="js-item-body">
+              
             </tbody>
           </table>
         </div>
@@ -136,6 +89,7 @@
   </main>
 
   <script src="admin-sidebar.js" defer></script>
+  <script src="script/admin_menu.js" type="module" defer></script>
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
 </body>

@@ -298,6 +298,20 @@ td {
   background: #f8fafc;
   color: #475569;
 }
+.not-available{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.not-available img{
+	width: 30%;
+	min-width: 200px;
+}
+.not-available p{
+	font-size: 1.5em;
+	margin-top: 20px;
+}
 @media (max-width: 1024px) {
   .side-bar {
     width: 220px;
@@ -352,6 +366,9 @@ td {
   .right {
     width: 100%;
     flex-direction: column;
+  }
+  main {
+    margin-top: 190px;
   }
   .home-btn,
   .logout-btn,

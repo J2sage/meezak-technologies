@@ -352,6 +352,9 @@ td {
     width: 100%;
     flex-direction: column;
   }
+  main {
+    margin-top: 190px;
+  }
   .home-btn,
   .logout-btn,
   .add-item-btn,
