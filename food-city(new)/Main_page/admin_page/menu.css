@@ -200,7 +200,17 @@ main{
   background: rgba(0, 0, 0, 0.35);
   z-index: 120;
 }
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 150;
+}
 .sidebar-overlay.show {
+  display: block;
+}
+.popup-overlay.show {
   display: block;
 }
 .order-section{
@@ -311,6 +321,102 @@ td {
 .not-available p{
 	font-size: 1.5em;
 	margin-top: 20px;
+}
+.add-item-container{
+  background: #fff5f0;
+  max-width: 450px;
+  width: 90%;
+  max-height: calc(100vh - 32px);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1.5em;
+  display: none;
+  z-index: 155;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+.add-item-container.show-popup{
+  display: block;
+}
+.add-item-container > p{
+  font-size: 1.2em;
+  font-weight: 700;
+  margin-bottom: 1em;
+}
+.add-item-container > ion-icon{
+  font-size: 1.5em;
+  font-weight: 700;
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  cursor: pointer;
+}
+.popup label{
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+#name, #price, #category, #item-id{
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  margin-bottom: 1.3em;
+  outline: none;
+}
+#price::-webkit-outer-spin-button,
+#price::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.hidden-input {
+  display: none;
+}
+.custom-upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid black;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+.custom-upload-btn:hover{
+  background-color: rgb(255, 155, 119);
+  border: 1px solid white;
+  color: white;
+}
+.js-action{
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  gap: 0.7em;
+  margin-top: 2em;
+}
+.cancel-btn,.submit-btn{
+  padding: 7px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid grey;
+  transition: all 0.3s ease-in;
+}
+.cancel-btn:hover, .submit-btn:hover{
+  opacity: 0.7;
+}
+.submit-btn{
+  background-color: orangered;
+  color: white;
+  border: 1px solid white;
 }
 @media (max-width: 1024px) {
   .side-bar {

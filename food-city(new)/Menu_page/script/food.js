@@ -10,7 +10,7 @@ export function getProduct(productId) {
   return matchingProduct;
 }
 
-export const foods = [{
+export let foods = JSON.parse(localStorage.getItem('foods')) || [{
   id: '01',
   image: 'assets/foodcard1.webp',
   name: 'Fried Rice',
@@ -71,4 +71,8 @@ export const foods = [{
   price: 3000,
   category: 'Yam'
 }];
+saveFoodStorage();
 
+export function saveFoodStorage(){
+  localStorage.setItem('foods', JSON.stringify(foods))
+}

@@ -43,6 +43,7 @@
       </ul>
     </nav>
     <div class="sidebar-overlay"></div>
+    <div class="popup-overlay"></div>
 
     <section class="main-container">
       <section class="page-top">
@@ -85,7 +86,38 @@
           </table>
         </div>
       </section>
+
+      <section class="add-item-container" id="add-item-container" >
+        <p>Add New Menu Item</p>
+        <ion-icon name="close-circle" class="close-popup"></ion-icon>
+        <form action="" class="popup">
+          <div class="popup-input">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Enter Item name">
+          </div>
+          <div class="popup-input">
+            <label for="price">Price</label>
+            <input type="number" id="price" placeholder="Enter price">
+          </div>
+          <div class="popup-input">
+            <label for="category">Category</label>
+            <input type="text" id="category" placeholder="Category">
+          </div>
+          <div class="popup-input">
+            <input type="file" id="image-upload" accept="image/*" class="hidden-input" />
+            <label for="image-upload" class="custom-upload-btn">
+              <span>Click to upload image</span>
+            </label>
+          </div>
+          <div class="js-action">
+            <button type="reset" class="cancel-btn">Cancel</button>
+            <button type="submit" class="submit-btn">Submit</button>
+          </div>
+        </form>
+      </section>
+
     </section>
+
   </main>
 
   <script src="admin-sidebar.js" defer></script>
