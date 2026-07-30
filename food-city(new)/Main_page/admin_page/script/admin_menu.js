@@ -1,6 +1,6 @@
 import { foods, saveFoodStorage } from "../../../Menu_page/script/food.js";
 
-const normalize = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+export const normalize = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 let currentEditingId = null;
 
 const selectedCategory = document.getElementById('selectedCategory');
@@ -47,7 +47,7 @@ function renderAdminMenu(items){
   }
 }
 
-function showNoResults(){
+export function showNoResults(){
   document.querySelector('.js-item-body').innerHTML = `
     <div class="not-available">
       <img src="../../../Menu_page/icons/search_off.png" alt="search-off-image">

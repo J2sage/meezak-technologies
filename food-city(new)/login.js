@@ -1,4 +1,6 @@
-﻿const logInBox = document.querySelector('.login-box');
+﻿import { renderInfo } from "./dashboard/profile_page/profile.js";
+
+const logInBox = document.querySelector('.login-box');
 const backdrop = document.querySelector('.remove-container-backdrop');
 const menuLink = document.getElementById('menu-link');
 if(logInBox){
@@ -43,7 +45,7 @@ function closeLoginModal(){
   document.body.classList.remove('no-scroll');
 }
 
-function seedUsers(){
+export function seedUsers(){
   const storedUsers = JSON.parse(localStorage.getItem('usersDB') || 'null');
   if(storedUsers && storedUsers.length){
     return storedUsers;
@@ -51,8 +53,14 @@ function seedUsers(){
 
   const mockUsers = [
     { username: 'admin', password: '123', role: 'admin' },
-    { username: 'jibril', password: '123', role: 'customer', fullName: 'Jibril Adebayo', email: 'jibril@example.com' },
-    { username: 'balo', password: '456', role: 'customer', fullName: 'Balo Johnson', email: 'balo@example.com' }
+    { username: 'jibril', password: '123', 
+      role: 'customer', fullName: 'Jibril Adebayo', 
+      email: 'jibril@example.com', phoneNumber: '+1 202 555 0174' 
+    },
+    { username: 'balo', password: '456', 
+      role: 'customer', fullName: 'Balo Johnson', 
+      email: 'balo@example.com', phoneNumber: '+1 202 555 0183' 
+    }
   ];
   localStorage.setItem('usersDB', JSON.stringify(mockUsers));
   return mockUsers;
@@ -116,6 +124,7 @@ function logIn(event){
     toggleMenuLink(foundUser);
     closeLoginModal();
     redirectBasedOnRole(foundUser);
+    renderInfo(foundUser);
 
   }else{
     alert('Invalid Credentials');
@@ -154,6 +163,7 @@ function logOut(){
   localStorage.removeItem('currentUser');
   updateLoginLabel();
   updatedashBoardLabel();
+  renderInfo();
   toggleMenuLink();
   window.location.replace(getHomePagePath());
 }
@@ -180,12 +190,30 @@ document.querySelectorAll('.log-in').forEach((logInButton) => {
 document.querySelector('#login-close')?.addEventListener('click', closeLoginModal);
 document.querySelector('.login-box form')?.addEventListener('submit', logIn);
 
-const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+export const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 if(currentUser){
   updateLoginLabel(currentUser);
   updatedashBoardLabel(currentUser);
   toggleMenuLink(currentUser);
   protectMenuPage(currentUser);
+  renderInfo(currentUser);
 }else{
   toggleMenuLink();
+}
+
+export function updateProfile({ fullName, email, phoneNumber, password }) {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  if (!currentUser) return null;
+
+  const usersDB = JSON.parse(localStorage.getItem('usersDB') || '[]');
+  const updatedUser = { ...currentUser, fullName, email, phoneNumber, password };
+  localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+  const newUsersDB = usersDB.map((user) =>
+    user.username === updatedUser.username ? updatedUser : user
+  );
+  localStorage.setItem('usersDB', JSON.stringify(newUsersDB));
+
+  renderInfo(updatedUser);
+  return updatedUser;
 }

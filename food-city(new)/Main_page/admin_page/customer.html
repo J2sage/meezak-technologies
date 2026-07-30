@@ -23,8 +23,10 @@
         </div>
       </div>
       <div class="right">
-        <button class="secondary-btn">Export</button>
-        <button class="add-item-btn">+ Add Customer</button>
+        <button class="add-item-btn">
+          <ion-icon name="sync"></ion-icon>
+          Refresh
+        </button>
       </div>
     </div>
   </header>
@@ -52,10 +54,10 @@
         </div>
         <div class="page-actions">
           <div class="search-group">
-            <input type="text" placeholder="Search customers..." aria-label="Search customers">
+            <input type="text" id="search-input" placeholder="Search customers..." aria-label="Search customers">
           </div>
           <div class="filter-group">
-            <select aria-label="Filter by status">
+            <select aria-label="Filter by status" id="selected-status">
               <option value="all">All Statuses</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
@@ -71,48 +73,15 @@
             <thead>
               <tr>
                 <th>Customer</th>
-                <th>Email</th>
+                <th>Username</th>
                 <th>Phone</th>
                 <th>Total Orders</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="item-cell">
-                  <img class="avatar" src="../../Main_page/assets/icons/customer1.png" alt="John Doe">
-                  <div>
-                    <div class="customer-name">John Doe</div>
-                    <div class="customer-email">john.doe@email.com</div>
-                  </div>
-                </td>
-                <td>john.doe@email.com</td>
-                <td>+1 202 555 0183</td>
-                <td>24</td>
-                <td><span class="status-badge active"><ion-icon name="checkmark-circle"></ion-icon> Active</span></td>
-                <td class="action-buttons">
-                  <button aria-label="View customer"><ion-icon name="eye"></ion-icon></button>
-                  <button aria-label="Delete customer"><ion-icon name="trash"></ion-icon></button>
-                </td>
-              </tr>
-              <tr>
-                <td class="item-cell">
-                  <img class="avatar" src="../../Main_page/assets/icons/customer2.png" alt="Jane Smith">
-                  <div>
-                    <div class="customer-name">Jane Smith</div>
-                    <div class="customer-email">jane.smith@email.com</div>
-                  </div>
-                </td>
-                <td>jane.smith@email.com</td>
-                <td>+1 202 555 0174</td>
-                <td>18</td>
-                <td><span class="status-badge active"><ion-icon name="checkmark-circle"></ion-icon> Active</span></td>
-                <td class="action-buttons">
-                  <button aria-label="View customer"><ion-icon name="eye"></ion-icon></button>
-                  <button aria-label="Delete customer"><ion-icon name="trash"></ion-icon></button>
-                </td>
-              </tr>
+            <tbody class="js-customer-body">
+              
             </tbody>
           </table>
         </div>
@@ -121,6 +90,7 @@
   </main>
 
   <script src="admin-sidebar.js" defer></script>
+  <script src="script/admin_customer.js" type="module" defer></script>
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
 </body>
