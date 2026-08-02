@@ -1,15 +1,26 @@
 import { getProduct } from "../script/food.js";
 import { updateDashboard, updateOrder } from "../../dashboard/dashboard.js";
-export const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-export function updateCart(){
-  let cartHTML = ``;
+export const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function getStoredOrders() {
+  return JSON.parse(localStorage.getItem("orders") || "[]");
+}
+
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("currentUser") || "null");
+}
+
+export function updateCart() {
+  let cartHTML = "";
   let finalTotal = 0;
-  cart.forEach((cartItem)=>{
+
+  cart.forEach((cartItem) => {
     const productId = cartItem.productId;
     const matchingProduct = getProduct(productId);
     if (!matchingProduct) return;
-    let quantityTotal = cartItem.quantity * matchingProduct.price;
+
+    const quantityTotal = cartItem.quantity * matchingProduct.price;
 
     cartHTML += `
       <div class="cart" data-product-id='${matchingProduct.id}'>
@@ -36,31 +47,83 @@ export function updateCart(){
     finalTotal += quantityTotal;
   });
 
-  const container = document.querySelector('.cart-body');
+  const container = document.querySelector(".cart-body");
   if (container) {
     container.innerHTML = cartHTML;
   }
+
   updateorderSummary(finalTotal);
   updateDashboard();
   updateOrder();
 }
 
 export function saveToStorage() {
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-if (document.readyState !== 'loading') {
+export function createOrder() {
+  if (!cart.length) return null;
+
+  const currentUser = getCurrentUser();
+  const items = cart
+    .map((item) => {
+      const product = getProduct(item.productId);
+      if (!product) return null;
+      return {
+        productId: item.productId,
+        name: product.name,
+        price: product.price,
+        quantity: item.quantity,
+        image: product.image,
+      };
+    })
+    .filter(Boolean);
+
+  if (!items.length) return null;
+
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const tax = subtotal * 0.1;
+  const shipping = subtotal > 10000 || subtotal <= 0 ? 0 : 1000;
+
+  const order = {
+    id: `FD${Date.now().toString().slice(-6)}`,
+    customerName: currentUser?.fullName || "Guest Customer",
+    customerUsername: currentUser?.username || "guest",
+    items,
+    subtotal,
+    tax,
+    shipping,
+    total: subtotal + tax + shipping,
+    status: "Confirmed",
+    createdAt: new Date().toLocaleString(),
+    progress: 25,
+    paymentMethod: "Cash on Delivery",
+  };
+
+  const orders = getStoredOrders();
+  orders.unshift(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+  localStorage.setItem("currentOrder", JSON.stringify(order));
+
+  cart.splice(0, cart.length);
+  saveToStorage();
+  updateCartQuantity();
+
+  return order;
+}
+
+if (document.readyState !== "loading") {
   updateCart();
 } else {
-  document.addEventListener('DOMContentLoaded', updateCart)
-};
+  document.addEventListener("DOMContentLoaded", updateCart);
+}
 
-const cartBody = document.querySelector('.cart-body');
+const cartBody = document.querySelector(".cart-body");
 if (cartBody) {
-  cartBody.addEventListener('click', (event) => {
-    const increaseBtn = event.target.closest('.increase');
-    const decreaseBtn = event.target.closest('.decrease');
-    const deleteBtn = event.target.closest('.delete');
+  cartBody.addEventListener("click", (event) => {
+    const increaseBtn = event.target.closest(".increase");
+    const decreaseBtn = event.target.closest(".decrease");
+    const deleteBtn = event.target.closest(".delete");
 
     if (increaseBtn) {
       const productId = increaseBtn.dataset.productId;
@@ -87,14 +150,14 @@ if (cartBody) {
     if (deleteBtn) {
       const productId = deleteBtn.dataset.productId;
       const matchingItem = getProduct(productId);
-      document.body.classList.add('no-scroll');
-      const backdrop =  document.querySelector('.remove-container-backdrop');
-      backdrop.classList.add('show');
-      if (!matchingItem) return;
-      
-      let removeContainerHTML;
+      document.body.classList.add("no-scroll");
 
-      removeContainerHTML = `
+      const backdrop = document.querySelector(".remove-container-backdrop");
+      backdrop?.classList.add("show");
+
+      if (!matchingItem) return;
+
+      const removeContainerHTML = `
         <h3>Remove item from cart</h3>
         <hr>
         <p>Do you wish to remove this item from your cart?</p>
@@ -106,53 +169,53 @@ if (cartBody) {
           <p class="confirm" data-product-id='${matchingItem.id}'>Yes, Remove</p>
         </div>
       `;
-      const removeContainer = document.querySelector('.remove-container');
-      
-      removeContainer.innerHTML = removeContainerHTML;
-      removeContainer.style.display = 'block';
 
-      const container = document.querySelector('.container');
-      if(container){
-        container.setAttribute('inert', '');
+      const removeContainer = document.querySelector(".remove-container");
+      if (removeContainer) {
+        removeContainer.innerHTML = removeContainerHTML;
+        removeContainer.style.display = "block";
       }
-      // delFromCart(productId);
+
+      const container = document.querySelector(".container");
+      if (container) {
+        container.setAttribute("inert", "");
+      }
     }
   });
 }
 
-const removeContainer = document.querySelector('.remove-container');
+const removeContainer = document.querySelector(".remove-container");
 if (removeContainer) {
-  removeContainer.addEventListener('click', (event) => {
-    const cancel = event.target.closest('.cancel');
-    const confirm = event.target.closest('.confirm');
-    document.body.classList.remove('no-scroll');
+  removeContainer.addEventListener("click", (event) => {
+    const cancel = event.target.closest(".cancel");
+    const confirm = event.target.closest(".confirm");
+    document.body.classList.remove("no-scroll");
 
-    const backdrop =  document.querySelector('.remove-container-backdrop');
-    backdrop.classList.remove('show');
+    const backdrop = document.querySelector(".remove-container-backdrop");
+    backdrop?.classList.remove("show");
 
     if (cancel) {
-      removeContainer.style.display = 'none';
-      const container = document.querySelector('.container');
-      if(container){
-        container.removeAttribute('inert');
+      removeContainer.style.display = "none";
+      const container = document.querySelector(".container");
+      if (container) {
+        container.removeAttribute("inert");
       }
       return;
     }
 
     if (confirm) {
-      removeContainer.style.display = 'none';
+      removeContainer.style.display = "none";
       const productId = confirm.dataset.productId;
       delFromCart(productId);
-      const container = document.querySelector('.container');
-      if(container){
-        container.removeAttribute('inert');
+      const container = document.querySelector(".container");
+      if (container) {
+        container.removeAttribute("inert");
       }
     }
   });
 }
 
-function delFromCart(productId){
-
+function delFromCart(productId) {
   const index = cart.findIndex((item) => item.productId === productId);
   if (index !== -1) {
     cart.splice(index, 1);
@@ -161,52 +224,62 @@ function delFromCart(productId){
     updateCartQuantity();
   }
 }
-export function updateCartQuantity(params) {
+
+export function updateCartQuantity() {
   let cartQuantitys = 0;
-  cart.forEach((item)=>{
-    cartQuantitys += item.quantity
+  cart.forEach((item) => {
+    cartQuantitys += item.quantity;
   });
 
-  const CQ = document.querySelector('#cart-quantity');
-  if(cartQuantitys === 0){
-    CQ.innerHTML = '';
-  }else{
-    CQ.innerHTML = cartQuantitys;
+  const CQ = document.querySelector("#cart-quantity");
+  if (CQ) {
+    CQ.innerHTML = cartQuantitys === 0 ? "" : cartQuantitys;
   }
 }
 
-function updateorderSummary(finalTotal){
-  let shipping;
-  if(finalTotal > 10000 || finalTotal <= 0){
-    shipping = 0;
-  }else{
-    shipping = 1000
-  }
-  let taxP = ((10/100)*finalTotal);
-  let orderSummaryHTML = `
+function updateorderSummary(finalTotal) {
+  let shipping = finalTotal > 10000 || finalTotal <= 0 ? 0 : 1000;
+  const taxP = (10 / 100) * finalTotal;
+
+  const orderSummaryHTML = `
     <div class="order-container">
       <h3 class="summary">ORDER SUMMARY</h3>
       <hr class="summary-line">
-      <p class="subtotal">
-        <b>Subtotal(₦) :</b> <span>${finalTotal.toLocaleString()}</span>
-      </p>
-      <p class="tax">
-        <b>Tax(10%)(₦) :</b> <span>${taxP.toLocaleString()}</span>
-      </p>
-      <p class="shipping">
-        <b>Shipping(₦) :</b> <span>${shipping}</span>
-      </p>
+      <p class="subtotal"><b>Subtotal(₦) :</b> <span>${finalTotal.toLocaleString()}</span></p>
+      <p class="tax"><b>Tax(10%)(₦) :</b> <span>${taxP.toLocaleString()}</span></p>
+      <p class="shipping"><b>Shipping(₦) :</b> <span>${shipping}</span></p>
       <hr>
-      <p class="afterTotal">
-        <b>Total(₦) :</b> <span>${(finalTotal + taxP + shipping).toLocaleString()}</span>
-      </p>
+      <p class="afterTotal"><b>Total(₦) :</b> <span>${(finalTotal + taxP + shipping).toLocaleString()}</span></p>
       <button type="button" class="checkout_btn">PROCEED TO CHECKOUT</button>
     </div>
   `;
 
-  const container = document.querySelector('.order');
+  const container = document.querySelector(".order");
   if (container) {
     container.innerHTML = orderSummaryHTML;
   }
 }
 
+const orderContainer = document.querySelector(".order");
+if (orderContainer) {
+  orderContainer.addEventListener("click", (event) => {
+    if (event.target.closest(".checkout_btn")) {
+      const order = createOrder();
+      if (!order) {
+        alert("Your cart is empty. Add some meals first.");
+        return;
+      }
+      window.location.href = "../../dashboard/order_page/order.html";
+    }
+  });
+}
+
+const clearButton = document.querySelector(".clear");
+if (clearButton) {
+  clearButton.addEventListener("click", () => {
+    cart.splice(0, cart.length);
+    saveToStorage();
+    updateCartQuantity();
+    updateCart();
+  });
+}

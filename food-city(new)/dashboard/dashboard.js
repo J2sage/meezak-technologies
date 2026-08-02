@@ -1,63 +1,91 @@
-import { getProduct } from '../Menu_page/script/food.js';
-import { cart } from '../Menu_page/cart_page/renderOrder.js';
+import { getProduct } from "../Menu_page/script/food.js";
+import { cart } from "../Menu_page/cart_page/renderOrder.js";
 
-export function updateDashboard(){
-  let dashboardHTML = ``;
-  let finalTotal = 0;
-  cart.forEach((cartItem)=>{
-    const productId = cartItem.productId;
-    const matchingProduct = getProduct(productId);
-    if(!matchingProduct) return;
-    let quantityTotal = cartItem.quantity * matchingProduct.price;
-
-    dashboardHTML +=`
-      <li>
-        <div class="item-left">
-          <img src="../Menu_page/${matchingProduct.image}" alt="Fried Rice"> ${matchingProduct.name}</span>
-        </div>
-        <p class="item-price">₦${(matchingProduct.price * cartItem.quantity).toLocaleString()}</p>
-      </li>
-    `;
-
-    finalTotal += quantityTotal;
-  })
-
-  const container = document.querySelector('.item-list');
-  if(container){
-    container.innerHTML = dashboardHTML;
-  }
-  document.querySelector('.totalPElement') && (document.querySelector('.totalPElement')
-    .innerHTML = `₦${(finalTotal).toLocaleString()}`)
+function getCurrentOrder() {
+  return JSON.parse(localStorage.getItem("currentOrder") || "null");
 }
 
-export function updateOrder(){
-  let orderHTML = ``;
-  cart.forEach((cartItem)=>{
-    const productId = cartItem.productId;
-    const matchingProduct = getProduct(productId);
-    if(!matchingProduct) return;
+function getOrderItems() {
+  const currentOrder = getCurrentOrder();
+  if (currentOrder?.items?.length) {
+    return currentOrder.items;
+  }
 
+  return cart
+    .map((cartItem) => {
+      const product = getProduct(cartItem.productId);
+      if (!product) return null;
+      return {
+        name: product.name,
+        price: product.price,
+        quantity: cartItem.quantity,
+        image: product.image,
+        productId: cartItem.productId,
+      };
+    })
+    .filter(Boolean);
+}
+
+export function updateDashboard() {
+  const orderItems = getOrderItems();
+  let dashboardHTML = "";
+  let finalTotal = 0;
+
+  orderItems.forEach((item) => {
+    const itemPrice = item.price * item.quantity;
+    dashboardHTML += `
+      <li>
+        <div class="item-left">
+          <img src="../Menu_page/${item.image}" alt="${item.name}"> ${item.name}
+        </div>
+        <p class="item-price">₦${itemPrice.toLocaleString()}</p>
+      </li>
+    `;
+    finalTotal += itemPrice;
+  });
+
+  const container = document.querySelector(".item-list");
+  if (container) {
+    container.innerHTML = dashboardHTML || '<li class="empty-state">No active order yet.</li>';
+  }
+
+  const totalElement = document.querySelector(".totalPElement");
+  if (totalElement) {
+    totalElement.innerHTML = `₦${finalTotal.toLocaleString()}`;
+  }
+}
+
+export function updateOrder() {
+  const orderItems = getOrderItems();
+  let orderHTML = "";
+
+  if (!orderItems.length) {
+    const details = document.querySelector(".details");
+    if (details) {
+      details.innerHTML = '<p class="empty-state">No active order yet.</p>';
+    }
+    return;
+  }
+
+  orderItems.forEach((item) => {
     orderHTML += `
       <div class="cart-item">
         <div class="product-info">
-          <img src="../../Menu_page/${matchingProduct.image}" alt="${matchingProduct.name}">
+          <img src="../../Menu_page/${item.image}" alt="${item.name}">
           <div class="text">
-            <p class="name">${matchingProduct.name}</p>
+            <p class="name">${item.name}</p>
             <p class="stock">In stock</p>
           </div>
         </div>
-        <p class="price">₦${(matchingProduct.price).toLocaleString()}</p>
-        <div class="quantity">
-          x${cartItem.quantity}
-        </div>
-        <p class="total">₦${(matchingProduct.price * cartItem.quantity).toLocaleString()}</p>
+        <p class="price">₦${item.price.toLocaleString()}</p>
+        <div class="quantity">x${item.quantity}</div>
+        <p class="total">₦${(item.price * item.quantity).toLocaleString()}</p>
       </div>
     `;
   });
 
-  document.querySelector('.details') && (document.querySelector('.details')
-    .innerHTML = orderHTML);
+  const details = document.querySelector(".details");
+  if (details) {
+    details.innerHTML = orderHTML;
+  }
 }
-
-  const currentPath = window.location.pathname;
-  console.log(currentPath);
