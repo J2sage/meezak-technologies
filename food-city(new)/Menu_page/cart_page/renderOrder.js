@@ -89,6 +89,7 @@ export function createOrder() {
     id: `FD${Date.now().toString().slice(-6)}`,
     customerName: currentUser?.fullName || "Guest Customer",
     customerUsername: currentUser?.username || "guest",
+    email: currentUser?.email || '',
     items,
     subtotal,
     tax,

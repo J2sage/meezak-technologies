@@ -40,7 +40,6 @@
         <li><a href="#dashboard" class="active"><ion-icon name="menu"></ion-icon><span>Dashboard</span></a></li>
         <li><a href="menu.html" ><ion-icon name="restaurant"></ion-icon><span>Menu Items</span></a></li>
         <li><a href="customer.html"><ion-icon name="people"></ion-icon><span>Customers</span></a></li>
-        <li><a href="#settings"><ion-icon name="settings"></ion-icon><span>Settings</span></a></li>
       </ul>
     </nav>
     <div class="sidebar-overlay"></div>
@@ -105,8 +104,8 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
+            <tbody id="admin-list">
+              <!-- <tr>
                 <td class="order-id">#1001</td>
                 <td>
                     <div class="customer">
@@ -119,7 +118,7 @@
                 <td>
                   <span class="status-badge delivered" ><ion-icon name="checkmark-circle"></ion-icon> Delivered</span>
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>
@@ -128,6 +127,7 @@
   </main>
 
   <script src="../../login.js" type="module" defer></script>
+  <script src="./script/admin.js" defer></script>
   <script src="admin-sidebar.js" defer></script>
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>

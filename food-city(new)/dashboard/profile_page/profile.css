@@ -260,6 +260,7 @@ main{
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  margin-top: 1rem;
 }
 
 .profile-field label {
@@ -310,8 +311,25 @@ main{
   border-color: #ff8b59;
   box-shadow: 0 0 0 4px rgba(255, 129, 83, 0.08);
 }
+.password-wrapper{
+  background-color: white;
+  display: none;
+}
+.password-wrapper.show{
+  display: block;
+}
 
-.edit-button {
+.error-mssg, .error-new{
+  color: red;
+  font-size: 0.8rem;
+  margin: 0.2rem 0 1rem;
+  display: none;
+}
+.change-password-btn.active{
+  display: none;
+}
+
+.edit-button, .change-password-btn, .save-password-btn {
   width: fit-content;
   padding: 0.95rem 1.8rem;
   border: none;
@@ -321,6 +339,9 @@ main{
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 16px 30px rgba(255, 110, 31, 0.18);
+}
+.save-password-btn{
+  margin-top: 1rem;
 }
 
 .recent-orders .heading {
@@ -383,7 +404,7 @@ main{
   color: #2f6d41;
 }
 
-.order-status.completed {
+.order-status.confirmed {
   background: #d7f0ff;
   color: #10709d;
 }

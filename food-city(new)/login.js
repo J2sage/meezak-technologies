@@ -71,7 +71,7 @@ function updateLoginLabel(user = null){
     span.textContent = user ? user.username : 'LOGIN';
   });
 }
-function updatedashBoardLabel(user = null){
+export function updatedashBoardLabel(user = null){
   document.querySelectorAll('.full-name').forEach((span) => {
     span.textContent = user ? user.fullName : '';
   })
@@ -215,5 +215,6 @@ export function updateProfile({ fullName, email, phoneNumber, password }) {
   localStorage.setItem('usersDB', JSON.stringify(newUsersDB));
 
   renderInfo(updatedUser);
+  updatedashboardLabel(updatedUser);
   return updatedUser;
 }

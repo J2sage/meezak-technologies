@@ -125,6 +125,11 @@ main{
   color: #1e1e1e;
   line-height: 1.2;
 }
+.full-name:empty::before {
+  content: "Loading name...";
+  color: gray;
+  font-size: 1rem;
+}
 .status{
   font-size: 0.75rem;
   background: rgb(255, 205, 187);

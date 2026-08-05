@@ -74,61 +74,51 @@
               <label for="phone">Phone Number</label>
               <input id="phone" type="tel" value="">
             </div>
-            <div class="profile-field password-field">
-              <label for="password">Password</label>
-              <div class="input-with-icon">
-                <input id="password" type="password" value="">
-                <button class="toggle-password" type="button" aria-label="Show password">
-                  <ion-icon name="eye"></ion-icon>
-                </button>
-              </div>
+          </div>
+          <button class="edit-button" type="button">Save Changes</button>
+        </div>
+
+        <h3>Password</h3>
+        <button class="change-password-btn">Change password</button>
+
+        <div class="password-wrapper ">
+          <div class="profile-field password-field">
+            <label for="currentpassword">Current Password</label>
+            <div class="input-with-icon">
+              <input id="current-password" class="password" type="password" value="">
+              <button class="toggle-password" type="button" aria-label="Show password">
+                <ion-icon name="eye"></ion-icon>
+              </button>
             </div>
           </div>
-          <button class="edit-button" type="button">Edit Profile</button>
+          <p class="error-mssg">Current password is incorrect.</p>
+
+          <div class="profile-field password-field">
+            <label for="new-password">New Password</label>
+            <div class="input-with-icon">
+              <input id="new-password" class="password" type="password" value="">
+              <button class="toggle-password" type="button" aria-label="Show password">
+                <ion-icon name="eye"></ion-icon>
+              </button>
+            </div>
+          </div>
+          <div class="profile-field password-field">
+            <label for="new-password">Confirm New Password</label>
+            <div class="input-with-icon">
+              <input id="confirm-password" class="password" type="password" value="">
+              <button class="toggle-password" type="button" aria-label="Show password">
+                <ion-icon name="eye"></ion-icon>
+              </button>
+            </div>
+          </div>
+          <p class="error-new">New passwords do not match.</p>
+
+          <button class="save-password-btn" type="button">Save Password</button>
         </div>
       </div>
 
       <section class="recent-orders card-section">
-        <div class="heading">
-          <h2>Recent Orders</h2>
-          <a href="#">View All Orders</a>
-        </div>
-        <div class="order-row">
-          <div class="order-meta">
-            <p class="order-id">Order #FD1245</p>
-            <p class="order-details">Margherita Pizza, Coca Cola</p>
-          </div>
-          <p class="order-date">May 25, 2024</p>
-          <span class="order-status delivered">Delivered</span>
-          <p class="order-price">₦8,500</p>
-        </div>
-        <div class="order-row">
-          <div class="order-meta">
-            <p class="order-id">Order #FD1244</p>
-            <p class="order-details">Classic Burger, French Fries</p>
-          </div>
-          <p class="order-date">May 22, 2024</p>
-          <span class="order-status completed">Completed</span>
-          <p class="order-price">₦6,200</p>
-        </div>
-        <div class="order-row">
-          <div class="order-meta">
-            <p class="order-id">Order #FD1243</p>
-            <p class="order-details">Chicken Alfredo Pasta, Sprite</p>
-          </div>
-          <p class="order-date">May 18, 2024</p>
-          <span class="order-status delivered">Delivered</span>
-          <p class="order-price">₦7,800</p>
-        </div>
-        <div class="order-row">
-          <div class="order-meta">
-            <p class="order-id">Order #FD1242</p>
-            <p class="order-details">Chicken Wings, Coca Cola</p>
-          </div>
-          <p class="order-date">May 15, 2024</p>
-          <span class="order-status cancelled">Cancelled</span>
-          <p class="order-price">₦5,400</p>
-        </div>
+       
       </section>
     </div>
 

@@ -379,6 +379,18 @@ td {
   background: #d1fae5;
   color: #065f46;
 }
+.status-badge.confirmed {
+  background: #d7f0ff;
+  color: #10709d;
+}
+.status-badge.cancelled {
+  background: #ffe8dc;
+  color: #b8441d;
+}
+.status-badge.preparing {
+  background: #fffcdc;
+  color: #b8441d;
+}
 
 @media (max-width: 1024px) {
   .side-bar {

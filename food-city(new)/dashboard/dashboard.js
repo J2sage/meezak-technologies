@@ -27,6 +27,16 @@ function getOrderItems() {
 }
 
 export function updateDashboard() {
+  const currentOrder = getCurrentOrder();
+  const orderStatusElement = document.querySelector('.order-status');
+  const orderDateElement = document.querySelector('.order-date');
+  const orderIdElement = document.querySelector('.order-id');
+  if (orderStatusElement, orderDateElement, orderIdElement) {
+    orderStatusElement.innerHTML = `${currentOrder?.status ?? ''}`;
+    orderIdElement.innerHTML = `${currentOrder?.id ?? ''}`;
+    orderDateElement.innerHTML = `${currentOrder?.createdAt ?? ''}`;
+  }
+
   const orderItems = getOrderItems();
   let dashboardHTML = "";
   let finalTotal = 0;
