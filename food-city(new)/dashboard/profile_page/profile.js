@@ -1,4 +1,5 @@
-import { updateProfile } from "../../login.js";
+import { changePasswordWithApi, updateProfileWithApi } from "../../data/auth-api.js";
+import { getMyOrdersFromApi } from "../../data/orders-api.js";
 
 const passwordInput = document.querySelector('.password');
 const toggleBtn = document.querySelector('.toggle-password');
@@ -41,11 +42,18 @@ export function renderInfo(user = null) {
   renderRecentOrders();
 }
 
-function renderRecentOrders() {
-  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+async function renderRecentOrders() {
   const recentOrdersContainer = document.querySelector(".recent-orders");
 
   if (!recentOrdersContainer) return;
+
+  let orders = [];
+  try {
+    orders = await getMyOrdersFromApi({ limit: 4 });
+  } catch (error) {
+    recentOrdersContainer.innerHTML = `<p class="empty-state">${error.message || 'Could not load recent orders.'}</p>`;
+    return;
+  }
 
   const rows = orders
     .toReversed()
@@ -73,7 +81,10 @@ function renderRecentOrders() {
   `;
 }
 
-document.querySelector('.edit-button')?.addEventListener('click', ()=>  { 
+/* ============================================================
+   LOCAL PROFILE UPDATE FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
+document.querySelector('.edit-button')?.addEventListener('click', ()=>  {
   const currentUser = getCurrentUser();
   if(!currentUser) return
 
@@ -116,6 +127,9 @@ changePasswordBtn?.addEventListener('click', () => {
   changePasswordBtn?.classList.toggle('active');
 })
 
+/* ============================================================
+   LOCAL PASSWORD FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
 savePasswordBtn?.addEventListener('click', () => {
   const currentUser = getCurrentUser();
   const errorMessage = document.querySelector('.error-mssg');
@@ -151,3 +165,61 @@ savePasswordBtn?.addEventListener('click', () => {
     }
   }
 })
+*/
+
+/* ============================================================
+   API PASSWORD FLOW — ACTIVE
+   ============================================================
+*/
+savePasswordBtn?.addEventListener('click', async () => {
+  const errorMessage = document.querySelector('.error-mssg');
+  const errorNewMessage = document.querySelector('.error-new');
+  const currentPassword = document.getElementById('current-password')?.value.trim() || '';
+  const newPassword = document.getElementById('new-password')?.value.trim() || '';
+  const confirmNewPassword = document.getElementById('confirm-password')?.value.trim() || '';
+
+  if (errorMessage) errorMessage.style.display = 'none';
+  if (errorNewMessage) errorNewMessage.style.display = 'none';
+
+  try {
+    await changePasswordWithApi({ oldPassword: currentPassword, newPassword, confirmNewPassword });
+    document.getElementById('current-password').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+    passwordWrapper?.classList.remove('show');
+    changePasswordBtn?.classList.remove('active');
+    alert('Password changed successfully.');
+  } catch (error) {
+    if (error.message?.toLowerCase().includes('match')) {
+      if (errorNewMessage) errorNewMessage.style.display = 'block';
+    } else if (errorMessage) {
+      errorMessage.textContent = error.message || 'Could not change password.';
+      errorMessage.style.display = 'block';
+    }
+  }
+});
+
+
+/* ============================================================
+   API PROFILE UPDATE FLOW — ACTIVE
+   ============================================================
+   Mapping: frontend fullName/phoneNumber -> API name/phone
+*/
+document.querySelector('.edit-button')?.addEventListener('click', async () => {
+  const currentUser = getCurrentUser();
+  if (!currentUser) return;
+
+  try {
+    const user = await updateProfileWithApi({
+      fullName: document.querySelector('#fullName')?.value.trim() || currentUser.fullName,
+      email: document.querySelector('#email')?.value.trim() || currentUser.email,
+      phoneNumber: document.querySelector('#phone')?.value.trim() || ''
+    });
+
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    renderInfo(user);
+    alert('Profile updated successfully.');
+  } catch (error) {
+    alert(error.message || 'Could not update profile.');
+  }
+});

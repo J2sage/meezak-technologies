@@ -1,7 +1,12 @@
-import { foods, saveFoodStorage } from "../../../Menu_page/script/food.js";
+import { getMenuFromApi, createMenuItem, updateMenuItem, deleteMenuItem } from '../../../data/menu-api.js';
 
-export const normalize = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-let currentEditingId = null;
+export const normalize = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+/* ============================================================
+   LOCAL ADMIN MENU FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
+   The old version imported foods.js and wrote changes to localStorage.
+*/
 
 const selectedCategory = document.getElementById('selectedCategory');
 const searchInputElement = document.getElementById('search-input');
@@ -15,153 +20,113 @@ const popupForm = document.querySelector('.popup');
 const itemName = document.getElementById('name');
 const itemPrice = document.getElementById('price');
 const itemCategory = document.getElementById('category');
-const itemImage = document.getElementById('image-upload');
 
-function renderAdminMenu(items){
-  let itemHTML = '';
+let foods = [];
+let currentEditingId = null;
 
-  items.forEach((foodItem)=>{
-    itemHTML+=`
-      <tr>
-        <td class="item-cell">
-          <img class="item-avatar" src="../../Main_page/${foodItem.image}" alt="Margherita Pizza">
-          <div>
-            <div class="item-name">${foodItem.name}</div>
-            <div class="item-category">${foodItem.category}</div>
-          </div>
-        </td>
-        <td>${foodItem.category}</td>
-        <td>₦${foodItem.price}</td>
-        <td><span class="status-badge available"><ion-icon name="checkmark-circle"></ion-icon> Available</span></td>
-        <td class="action-buttons">
-          <button type="button" aria-label="Edit item" class="edit-item" data-product-id="${foodItem.id}"><ion-icon name="create"></ion-icon></button>
-          <button type="button" class="delete-item" aria-label="Delete item" data-product-id="${foodItem.id}"><ion-icon name="trash"></ion-icon></button>
-        </td>
-      </tr>
-    `;
-  });
-  
+function imageSource(image) {
+  return /^https?:\/\//i.test(image) ? image : `../../Main_page/${image}`;
+}
+
+function renderAdminMenu(items) {
   const itemBody = document.querySelector('.js-item-body');
-  if(itemBody){
-    itemBody.innerHTML = itemHTML;
+  if (!itemBody) return;
+
+  itemBody.innerHTML = items.map((foodItem) => `
+    <tr>
+      <td class="item-cell"><img class="item-avatar" src="${imageSource(foodItem.image)}" alt="${foodItem.name}"><div><div class="item-name">${foodItem.name}</div><div class="item-category">${foodItem.category}</div></div></td>
+      <td>${foodItem.category}</td>
+      <td>₦${Number(foodItem.price).toLocaleString()}</td>
+      <td><span class="status-badge available"><ion-icon name="checkmark-circle"></ion-icon> Available</span></td>
+      <td class="action-buttons"><button type="button" class="edit-item" data-product-id="${foodItem.id}"><ion-icon name="create"></ion-icon></button><button type="button" class="delete-item" data-product-id="${foodItem.id}"><ion-icon name="trash"></ion-icon></button></td>
+    </tr>
+  `).join('');
+}
+
+export function showNoResults() {
+  const body = document.querySelector('.js-item-body');
+  if (body) body.innerHTML = '<tr><td colspan="5">No matching item</td></tr>';
+}
+
+function filterMenu() {
+  const category = normalize(selectedCategory?.value || 'all');
+  const query = normalize(searchInputElement?.value || '');
+  const filtered = foods.filter((item) => {
+    const categoryMatches = category === 'all' || normalize(item.category).includes(category);
+    const queryMatches = !query || normalize(item.name).includes(query) || normalize(item.category).includes(query);
+    return categoryMatches && queryMatches;
+  });
+  filtered.length ? renderAdminMenu(filtered) : showNoResults();
+}
+
+async function loadMenu() {
+  try {
+    foods = await getMenuFromApi();
+    renderAdminMenu(foods);
+  } catch (error) {
+    const body = document.querySelector('.js-item-body');
+    if (body) body.innerHTML = `<tr><td colspan="5">${error.message}</td></tr>`;
   }
 }
 
-export function showNoResults(){
-  document.querySelector('.js-item-body').innerHTML = `
-    <div class="not-available">
-      <img src="../../../Menu_page/icons/search_off.png" alt="search-off-image">
-      <p>No matching item</p>
-    </div>
-  `;
-}
+selectedCategory?.addEventListener('change', filterMenu);
+searchInputElement?.addEventListener('input', filterMenu);
 
-function checkArray(){
-  const categoryValue = selectedCategory ? selectedCategory.value : 'all';
-  const searchValue = searchInputElement ? searchInputElement.value : '';
-
-  const normalizedCategory = normalize(categoryValue.trim());
-  const normalizedSearch = normalize(searchValue.trim());
-
-  let filtered = foods;
-
-  if(normalizedCategory !== 'all'){
-    filtered = filtered.filter((item)=> normalize(item.category).includes(normalizedCategory));
-  }
-
-  if(normalizedSearch){
-    filtered = filtered.filter((item)=>{
-      return normalize(item.name).includes(normalizedSearch) || normalize(item.category).includes(normalizedSearch);
-    });
-  }
-
-  if(filtered.length === 0){
-    showNoResults();
-  } else {
-    renderAdminMenu(filtered);
-  }
-}
-
-renderAdminMenu(foods);
-
-if(selectedCategory){
-  selectedCategory.addEventListener('change', checkArray);
-}
-
-if(searchInputElement){
-  searchInputElement.addEventListener('input', checkArray);
-}
-
-const toggleMenuPopup = ()=>{
+const toggleMenuPopup = () => {
   overlay?.classList.toggle('show');
   popUp?.classList.toggle('show-popup');
   document.body.classList.toggle('sidebar-open');
-}
+};
 
 addItem?.addEventListener('click', toggleMenuPopup);
 closeBtn?.addEventListener('click', toggleMenuPopup);
 cancelBtn?.addEventListener('click', toggleMenuPopup);
 
-
-submitBtn?.addEventListener('click', (event) => {
+submitBtn?.addEventListener('click', async (event) => {
   event.preventDefault();
+  const existing = foods.find((item) => item.id === currentEditingId);
+  const payload = {
+    name: itemName?.value.trim() || existing?.name,
+    price: Number(itemPrice?.value) || existing?.price,
+    category: itemCategory?.value.trim() || existing?.category,
+    image: existing?.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'
+  };
 
-  if (currentEditingId) {
-    const itemIndex = foods.findIndex((item) => item.id === currentEditingId);
-
-    if (itemIndex !== -1) {
-      foods[itemIndex] = {
-        ...foods[itemIndex],
-        name: itemName?.value?.trim() || foods[itemIndex].name,
-        price: Number(itemPrice?.value) || foods[itemIndex].price,
-        category: itemCategory?.value?.trim() || foods[itemIndex].category
-      };
-    }
-  } else {
-    const newItem = {
-      id: `item-${Date.now()}`,
-      image: itemImage?.files?.[0] ? 'assets/foodcard1.webp' : 'assets/foodcard1.webp',
-      name: itemName?.value?.trim() || 'New Item',
-      price: Number(itemPrice?.value) || 0,
-      category: itemCategory?.value?.trim() || 'Uncategorized'
-    };
-    foods.push(newItem);
+  try {
+    if (currentEditingId) await updateMenuItem(currentEditingId, payload);
+    else await createMenuItem(payload);
+    await loadMenu();
+    popupForm?.reset();
+    currentEditingId = null;
+    toggleMenuPopup();
+  } catch (error) {
+    alert(error.message || 'Could not save menu item.');
   }
-
-  saveFoodStorage();
-  renderAdminMenu(foods);
-  popupForm?.reset();
-  toggleMenuPopup();
-  currentEditingId = null;
 });
 
-
-document.querySelector('.js-item-body')?.addEventListener('click', (event) => {
+document.querySelector('.js-item-body')?.addEventListener('click', async (event) => {
   const deleteBtn = event.target.closest('.delete-item');
   const editBtn = event.target.closest('.edit-item');
 
-  if(deleteBtn){
-    const productId = deleteBtn.dataset.productId;
-    const index = foods.findIndex((item) => item.id === productId);
-
-    if (index !== -1) {
-      foods.splice(index, 1);
-      saveFoodStorage();
-      renderAdminMenu(foods);
+  if (deleteBtn) {
+    try {
+      await deleteMenuItem(deleteBtn.dataset.productId);
+      await loadMenu();
+    } catch (error) {
+      alert(error.message || 'Could not delete menu item.');
     }
     return;
   }
-  
-  if(editBtn){
-    const productId = editBtn.dataset.productId;
-    currentEditingId = productId;
-    const targetItem = foods.find((item)=> item.id === productId);
-    if(targetItem){
-      itemName.value = targetItem.name;
-      itemCategory.value = targetItem.category;
-      itemPrice.value = targetItem.price;
 
-      toggleMenuPopup();
-    }
+  if (editBtn) {
+    const item = foods.find((food) => food.id === editBtn.dataset.productId);
+    if (!item) return;
+    currentEditingId = item.id;
+    if (itemName) itemName.value = item.name;
+    if (itemCategory) itemCategory.value = item.category;
+    if (itemPrice) itemPrice.value = item.price;
+    toggleMenuPopup();
   }
 });
+
+loadMenu();

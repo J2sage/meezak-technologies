@@ -1,7 +1,19 @@
-import { getProduct } from "../script/food.js";
+import {
+  getCartFromApi,
+  removeCartItem,
+  updateCartItem,
+  clearCartFromApi
+} from "../../data/cart-api.js";
+import { checkoutOrderWithApi } from "../../data/orders-api.js";
 import { updateDashboard, updateOrder } from "../../dashboard/dashboard.js";
 
-export const cart = JSON.parse(localStorage.getItem("cart")) || [];
+/* ============================================================
+   LOCAL CART FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
+   The old flow read and wrote the cart with localStorage and looked up
+   products through food.js.
+*/
+export const cart = [];
 
 function getStoredOrders() {
   return JSON.parse(localStorage.getItem("orders") || "[]");
@@ -11,21 +23,50 @@ function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser") || "null");
 }
 
+function getProductImage(image) {
+  return /^https?:\/\//i.test(image) ? image : `../${image}`;
+}
+
+function getCartProduct(cartItem) {
+  return cartItem.product;
+}
+
+export async function refreshCart({ silent = false } = {}) {
+  try {
+    const data = await getCartFromApi();
+    cart.splice(0, cart.length, ...data.items.map((item) => ({
+      productId: item.menuItemId,
+      quantity: item.quantity,
+      product: item
+    })));
+    updateCart();
+    updateCartQuantity();
+    return data;
+  } catch (error) {
+    cart.splice(0, cart.length);
+    updateCartQuantity();
+    if (!silent && document.querySelector('.cart-body')) {
+      alert(error.message || 'Could not load your cart.');
+    }
+    return null;
+  }
+}
+
 export function updateCart() {
   let cartHTML = "";
   let finalTotal = 0;
 
   cart.forEach((cartItem) => {
     const productId = cartItem.productId;
-    const matchingProduct = getProduct(productId);
+    const matchingProduct = getCartProduct(cartItem);
     if (!matchingProduct) return;
 
     const quantityTotal = cartItem.quantity * matchingProduct.price;
 
     cartHTML += `
-      <div class="cart" data-product-id='${matchingProduct.id}'>
+      <div class="cart" data-product-id='${productId}'>
         <div class="product-info">
-          <img src="../${matchingProduct.image}" alt="${matchingProduct.name}">
+          <img src="${getProductImage(matchingProduct.image)}" alt="${matchingProduct.name}">
           <div class="text">
             <p class="name">${matchingProduct.name}</p>
             <p class="stock">In stock</p>
@@ -33,13 +74,13 @@ export function updateCart() {
         </div>
         <p class="price">₦${matchingProduct.price.toLocaleString()}</p>
         <div class="quantity">
-          <img src="icon/decrease.png" class="decrease" data-product-id='${matchingProduct.id}' alt="decrease-png">
+          <img src="icon/decrease.png" class="decrease" data-product-id='${productId}' alt="decrease-png">
           ${cartItem.quantity}
-          <img src="icon/increase.png" class="increase" data-product-id='${matchingProduct.id}' alt="increase-png">
+          <img src="icon/increase.png" class="increase" data-product-id='${productId}' alt="increase-png">
         </div>
         <p class="total">₦${quantityTotal.toLocaleString()}</p>
         <div class="delete-container">
-          <img src="icon/icon-remove-item.png" class="delete" data-product-id='${matchingProduct.id}'>
+          <img src="icon/icon-remove-item.png" class="delete" data-product-id='${productId}'>
         </div>
       </div>
     `;
@@ -57,17 +98,21 @@ export function updateCart() {
   updateOrder();
 }
 
-export function saveToStorage() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
+// Kept as a compatibility export for older imports. API cart state is not
+// written to the old localStorage cart database.
+export function saveToStorage() {}
 
-export function createOrder() {
+/* ============================================================
+   LOCAL ORDER FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
+
+function createOrderLocalStorage() {
   if (!cart.length) return null;
 
   const currentUser = getCurrentUser();
   const items = cart
     .map((item) => {
-      const product = getProduct(item.productId);
+      const product = getCartProduct(item);
       if (!product) return null;
       return {
         productId: item.productId,
@@ -114,9 +159,28 @@ export function createOrder() {
 }
 
 if (document.readyState !== "loading") {
-  updateCart();
+  refreshCart({ silent: true });
 } else {
-  document.addEventListener("DOMContentLoaded", updateCart);
+  document.addEventListener("DOMContentLoaded", () => refreshCart({ silent: true }));
+}
+*/
+
+/* ============================================================
+   API CHECKOUT FLOW — ACTIVE
+   ============================================================
+   The backend creates the order from the authenticated user's API cart,
+   clears that cart, and awards reward points.
+*/
+async function checkoutWithApi() {
+  const result = await checkoutOrderWithApi();
+  localStorage.setItem('currentOrder', JSON.stringify(result.order));
+  return result.order;
+}
+
+if (document.readyState !== "loading") {
+  refreshCart({ silent: true });
+} else {
+  document.addEventListener("DOMContentLoaded", () => refreshCart({ silent: true }));
 }
 
 const cartBody = document.querySelector(".cart-body");
@@ -130,9 +194,9 @@ if (cartBody) {
       const productId = increaseBtn.dataset.productId;
       const matchingItem = cart.find((item) => item.productId === productId);
       if (matchingItem) {
-        matchingItem.quantity += 1;
-        saveToStorage();
-        updateCart();
+        updateCartItem(productId, matchingItem.quantity + 1)
+          .then(() => refreshCart({ silent: true }))
+          .catch((error) => alert(error.message || 'Could not update cart.'));
       }
       return;
     }
@@ -141,16 +205,17 @@ if (cartBody) {
       const productId = decreaseBtn.dataset.productId;
       const matchingItem = cart.find((item) => item.productId === productId);
       if (matchingItem && matchingItem.quantity > 1) {
-        matchingItem.quantity -= 1;
-        saveToStorage();
-        updateCart();
+        updateCartItem(productId, matchingItem.quantity - 1)
+          .then(() => refreshCart({ silent: true }))
+          .catch((error) => alert(error.message || 'Could not update cart.'));
       }
       return;
     }
 
     if (deleteBtn) {
       const productId = deleteBtn.dataset.productId;
-      const matchingItem = getProduct(productId);
+      const cartItem = cart.find((item) => item.productId === productId);
+      const matchingItem = cartItem?.product;
       document.body.classList.add("no-scroll");
 
       const backdrop = document.querySelector(".remove-container-backdrop");
@@ -163,11 +228,11 @@ if (cartBody) {
         <hr>
         <p>Do you wish to remove this item from your cart?</p>
         <div class="remove-img-container">
-          <img src="../${matchingItem.image}" alt="food-image" class="remove-img">
+          <img src="${getProductImage(matchingItem.image)}" alt="food-image" class="remove-img">
         </div>
         <div class="confirmation">
           <p class="cancel">No, Cancel</p>
-          <p class="confirm" data-product-id='${matchingItem.id}'>Yes, Remove</p>
+          <p class="confirm" data-product-id='${productId}'>Yes, Remove</p>
         </div>
       `;
 
@@ -216,13 +281,15 @@ if (removeContainer) {
   });
 }
 
-function delFromCart(productId) {
-  const index = cart.findIndex((item) => item.productId === productId);
-  if (index !== -1) {
-    cart.splice(index, 1);
-    saveToStorage();
-    updateCart();
-    updateCartQuantity();
+async function delFromCart(productId) {
+  const cartItem = cart.find((item) => item.productId === productId);
+  if (!cartItem) return;
+
+  try {
+    await removeCartItem(productId, cartItem.quantity);
+    await refreshCart({ silent: true });
+  } catch (error) {
+    alert(error.message || 'Could not remove item from cart.');
   }
 }
 
@@ -263,24 +330,52 @@ function updateorderSummary(finalTotal) {
 
 const orderContainer = document.querySelector(".order");
 if (orderContainer) {
-  orderContainer.addEventListener("click", (event) => {
+  orderContainer.addEventListener("click", async (event) => {
     if (event.target.closest(".checkout_btn")) {
-      const order = createOrder();
-      if (!order) {
-        alert("Your cart is empty. Add some meals first.");
-        return;
+      try {
+        const order = await checkoutWithApi();
+        if (!order) throw new Error("Your cart is empty. Add some meals first.");
+        sendOrderToWhatsapp();
+        window.location.href = "../../dashboard/order_page/order.html";
+      } catch (error) {
+        alert(error.message || "Could not place your order.");
       }
-      window.location.href = "../../dashboard/order_page/order.html";
     }
   });
 }
 
 const clearButton = document.querySelector(".clear");
 if (clearButton) {
-  clearButton.addEventListener("click", () => {
-    cart.splice(0, cart.length);
-    saveToStorage();
-    updateCartQuantity();
-    updateCart();
+  clearButton.addEventListener("click", async () => {
+    try {
+      await clearCartFromApi();
+      await refreshCart({ silent: true });
+    } catch (error) {
+      alert(error.message || 'Could not clear cart.');
+    }
   });
+}
+
+function sendOrderToWhatsapp(){
+  const whatsappNumber = "2347061140462";
+
+  const order = JSON.parse(localStorage.getItem("currentOrder"));
+  if (!order) {
+    console.error("No current order found.");
+    return;
+  }
+  
+  let message = `Hello, I would like to place an order:\n\nOrder ID: ${order.id}\nCustomer Name: ${order.customerName}\nEmail: ${order.email}\n\nItems:\n`;
+
+  order.items.forEach((item) => {
+    message += `- ${item.name} (Quantity: ${item.quantity}, Price: ₦${item.price.toLocaleString()})\n`;
+  });
+  message += `\nTotal: ₦${order.total.toLocaleString()}`;
+
+  message += `\nPlease confirm my order and send payment details.`;
+
+  console.log(message);
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+  window.open(whatsappUrl, "_blank");
 }

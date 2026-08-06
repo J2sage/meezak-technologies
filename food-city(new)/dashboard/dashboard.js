@@ -1,8 +1,27 @@
 import { getProduct } from "../Menu_page/script/food.js";
 import { cart } from "../Menu_page/cart_page/renderOrder.js";
+import { getMyOrdersFromApi } from "../data/orders-api.js";
 
 function getCurrentOrder() {
+  // API order cache: the source of truth is loaded by loadLatestOrder().
   return JSON.parse(localStorage.getItem("currentOrder") || "null");
+}
+
+/* ============================================================
+   LOCAL ORDER DISPLAY FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
+   The previous dashboard relied only on currentOrder in localStorage.
+*/
+
+async function loadLatestOrder() {
+  try {
+    const orders = await getMyOrdersFromApi({ limit: 1 });
+    if (orders[0]) localStorage.setItem('currentOrder', JSON.stringify(orders[0]));
+    updateDashboard();
+    updateOrder();
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 function getOrderItems() {
@@ -13,7 +32,7 @@ function getOrderItems() {
 
   return cart
     .map((cartItem) => {
-      const product = getProduct(cartItem.productId);
+      const product = cartItem.product ?? getProduct(cartItem.productId);
       if (!product) return null;
       return {
         name: product.name,
@@ -24,6 +43,10 @@ function getOrderItems() {
       };
     })
     .filter(Boolean);
+}
+
+function getProductImage(image, prefix) {
+  return /^https?:\/\//i.test(image) ? image : `${prefix}${image}`;
 }
 
 export function updateDashboard() {
@@ -46,7 +69,7 @@ export function updateDashboard() {
     dashboardHTML += `
       <li>
         <div class="item-left">
-          <img src="../Menu_page/${item.image}" alt="${item.name}"> ${item.name}
+          <img src="${getProductImage(item.image, '../Menu_page/')}" alt="${item.name}"> ${item.name}
         </div>
         <p class="item-price">₦${itemPrice.toLocaleString()}</p>
       </li>
@@ -81,7 +104,7 @@ export function updateOrder() {
     orderHTML += `
       <div class="cart-item">
         <div class="product-info">
-          <img src="../../Menu_page/${item.image}" alt="${item.name}">
+          <img src="${getProductImage(item.image, '../../Menu_page/')}" alt="${item.name}">
           <div class="text">
             <p class="name">${item.name}</p>
             <p class="stock">In stock</p>
@@ -99,3 +122,5 @@ export function updateOrder() {
     details.innerHTML = orderHTML;
   }
 }
+
+loadLatestOrder();

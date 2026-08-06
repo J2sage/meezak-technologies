@@ -1,5 +1,15 @@
-import { showNoResults, normalize } from "./admin_menu.js";
+import { getAdminOrders, getAdminOrderStats, updateOrderStatus } from '../../../data/admin-api.js';
 
+/* ============================================================
+   LOCAL ADMIN ORDER FLOW — COMMENTED OUT FOR COMPARISON
+   ============================================================
+   The old version read orders from localStorage and changed statuses locally.
+*/
+
+/* ============================================================
+   API ADMIN ORDER FLOW — ACTIVE
+   ============================================================
+*/
 const adminContainer = document.querySelector('#admin-list');
 const searchInputElement = document.getElementById('searchInput');
 const filterButtons = document.querySelectorAll('.filter-buttons button');
@@ -8,171 +18,98 @@ const countPreparing = document.getElementById('countPreparing');
 const countDelivering = document.getElementById('countDelivering');
 const countDelivered = document.getElementById('countDelivered');
 
-function updateNumbers(){
-  let confirmed = 0;
-  let being_prepared = 0;
-  let on_the_way = 0;
-  let delivered = 0;
+const normalize = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-  
-  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+let orders = [];
+let activeFilter = '';
 
-  orders.forEach(order =>{
-    if(order.status === 'Confirmed'){
-      confirmed +=1;
-    }else if(order.status === 'Preparing'){
-      being_prepared +=1;
-    } else if(order.status === 'On-the-Way'){
-      on_the_way +=1;
-    }else if(order.status === 'Delivered'){
-      delivered +=1;
-    }
-  })
+const displayStatus = (status) => String(status || '').replaceAll('_', ' ');
 
-  if(countReceived, countPreparing, countDelivering, countDelivered){
-    countReceived.innerHTML = confirmed;
-    countPreparing.innerHTML = being_prepared;
-    countDelivering.innerHTML = on_the_way;
-    countDelivered.innerHTML = delivered;
-  }
-
-}
-
-function displayCustomerOrders(orderList){
+function renderOrders(orderList) {
   if (!adminContainer) return;
-
-  adminContainer.innerHTML = ''; 
-
-  if (orderList.length === 0) {
-    adminContainer.innerHTML = `
-      <div class="no-orders-message">
-        <p>No orders found in this category.</p>
-      </div>
-    `;
+  if (!orderList.length) {
+    adminContainer.innerHTML = '<div class="no-orders-message"><p>No orders found in this category.</p></div>';
     return;
   }
 
-  let orderListHTML = ``;
-
-  orderList.forEach(order => {
-    const itemsHtml = order.items.map(item => `
-      <li class="admin-item-row">
-        <span class="item-qty">${item.quantity}x</span> 
-        <span class="item-name">${item.name}</span>
-      </li>
+  adminContainer.innerHTML = orderList.map((order) => {
+    const itemsHtml = (order.items || []).map((item) => `
+      <li class="admin-item-row"><span class="item-qty">${item.quantity}x</span><span class="item-name">${item.name}</span></li>
     `).join('');
+    const status = displayStatus(order.status);
 
-    orderListHTML+=`
+    return `
       <tr>
         <td class="order-id">${order.id}</td>
-        <td>
-            <div class="customer">
-              <span class="name">${order.customerName}</span>
-              <span class="email">${order.email}</span>
-            </div>
-        </td>
+        <td><div class="customer"><span class="name">${order.userName || order.customerName || ''}</span><span class="email">${order.email || ''}</span></div></td>
         <td>${itemsHtml}</td>
-        <td class="price"><strong>₦${order.total}</strong></td>
-        <td>
-          <span class="status-badge ${order.status.toLowerCase()}" data-product-id="${order.id}"><ion-icon name="checkmark-circle"></ion-icon> ${order.status}</span>
-        </td>
+        <td class="price"><strong>₦${Number(order.total || 0).toLocaleString()}</strong></td>
+        <td><button type="button" class="status-badge ${String(order.status).toLowerCase()}" data-order-id="${order.id}"><ion-icon name="checkmark-circle"></ion-icon> ${status}</button></td>
       </tr>
     `;
-
-    adminContainer.innerHTML = orderListHTML;
-  })
+  }).join('');
 }
 
-function initializeAdminPanel() {
-  const orders = JSON.parse(localStorage.getItem('orders')) || [];
-  displayCustomerOrders(orders);
-  updateNumbers();
+async function loadStats() {
+  try {
+    const stats = await getAdminOrderStats();
+    if (countReceived) countReceived.textContent = stats.confirmed ?? 0;
+    if (countPreparing) countPreparing.textContent = stats.being_prepared ?? 0;
+    if (countDelivering) countDelivering.textContent = stats.on_the_way ?? 0;
+    if (countDelivered) countDelivered.textContent = stats.delivered ?? 0;
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
-window.addEventListener('storage', (event) => {
-  if (event.key === 'orders' && event.newValue) {
-    const updatedOrders = JSON.parse(event.newValue);
-    displayCustomerOrders(updatedOrders);
-    updateNumbers();
+async function loadOrders() {
+  try {
+    orders = await getAdminOrders({ q: searchInputElement?.value.trim() || '', status: activeFilter });
+    renderOrders(orders);
+    await loadStats();
+  } catch (error) {
+    if (adminContainer) adminContainer.innerHTML = `<p class="empty-state">${error.message}</p>`;
+  }
+}
+
+filterButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    document.querySelector('.filter-buttons .active')?.classList.remove('active');
+    button.classList.add('active');
+    activeFilter = {
+      all: '',
+      received: 'confirmed',
+      preparing: 'being_prepared',
+      'on-the-way': 'on_the_way',
+      delivered: 'delivered'
+    }[button.dataset.filter] ?? '';
+    loadOrders();
+  });
+});
+
+searchInputElement?.addEventListener('input', loadOrders);
+
+adminContainer?.addEventListener('click', async (event) => {
+  const statusButton = event.target.closest('.status-badge');
+  if (!statusButton) return;
+
+  const order = orders.find((item) => item.id === statusButton.dataset.orderId);
+  if (!order) return;
+
+  const nextStatus = {
+    confirmed: 'being_prepared',
+    being_prepared: 'on_the_way',
+    on_the_way: 'delivered'
+  }[order.status];
+
+  if (!nextStatus) return;
+
+  try {
+    await updateOrderStatus(order.id, nextStatus);
+    await loadOrders();
+  } catch (error) {
+    alert(error.message || 'Could not update order status.');
   }
 });
 
-
-initializeAdminPanel();
-
-filterButtons.forEach(button =>{
-  button.addEventListener('click', ()=>{
-    document.querySelector('.filter-buttons .active').classList.remove('active');
-    event.target.classList.add('active');
-
-    const filterValue = event.target.dataset.filter;
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-
-    updateNumbers();
-
-    let filteredOrders = orders;
-
-    if (filterValue !== 'all') {
-      filteredOrders = orders.filter(order => {
-        if (filterValue === 'received') return order.status === 'Confirmed';
-        if (filterValue === 'preparing') return order.status === 'Preparing';
-        if (filterValue === 'on-the-way') return order.status === 'On-the-Way';
-        if (filterValue === 'delivered') return order.status === 'Delivered';
-        return false;
-      });
-    }
-
-    displayCustomerOrders(filteredOrders);
-    updateNumbers();
-  })
-})
-
-searchInputElement.addEventListener('input', ()=>{
-  const searchValue = searchInputElement ? searchInputElement.value : '';
-  const normalizedSearch = normalize(searchValue.trim());
-  
-  const orders = JSON.parse(localStorage.getItem('orders')) || [];
-
-  let filtered = orders;
-
-  if(normalizedSearch){
-    filtered = filtered.filter((order)=>{
-      return normalize(order.customerName).includes(normalizedSearch) || normalize(order.id).includes(normalizedSearch)
-    })
-  }
-
-  if(filtered.length === 0){
-      showNoResults();
-    } else {
-      displayCustomerOrders(filtered);
-    }
-})
-
-if (adminContainer) {
-  adminContainer.addEventListener('click', (event) => {
-    const statusButton = event.target.closest('.status-badge');
-    if (!statusButton) return;
-
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const matchingItem = orders.find(item => item.id === statusButton.dataset.productId);
-
-    if (matchingItem) {
-      if(matchingItem.status === 'Confirmed'){
-        matchingItem.status = 'Preparing';
-      }else if(matchingItem.status === 'Preparing'){
-        matchingItem.status = 'On-the-Way';
-      } else if(matchingItem.status === 'On-the-Way'){
-        matchingItem.status = 'Delivered';
-      }else if(matchingItem.status === 'Delivered'){
-        orders = orders.filter(item => item.id !== statusButton.dataset.productId);
-      }
-      
-      displayCustomerOrders(orders);
-      updateNumbers();
-      localStorage.setItem('orders', JSON.stringify(orders));
-    }
-  });
-}
-
-
-
+loadOrders();
