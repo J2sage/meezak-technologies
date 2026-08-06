@@ -54,11 +54,11 @@ export function seedUsers(){
   const mockUsers = [
     { username: 'admin', password: '123', role: 'admin' },
     { username: 'jibril', password: '123', 
-      role: 'customer', fullName: 'Jibril Adebayo', 
+      role: 'customer', fullName: 'Jibril Adebayo', active: true,
       email: 'jibril@example.com', phoneNumber: '+1 202 555 0174' 
     },
     { username: 'balo', password: '456', 
-      role: 'customer', fullName: 'Balo Johnson', 
+      role: 'customer', fullName: 'Balo Johnson', active: false,
       email: 'balo@example.com', phoneNumber: '+1 202 555 0183' 
     }
   ];

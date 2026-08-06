@@ -374,6 +374,7 @@ td {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
+  cursor: pointer;
 }
 .status-badge.delivered {
   background: #d1fae5;
@@ -383,13 +384,16 @@ td {
   background: #d7f0ff;
   color: #10709d;
 }
-.status-badge.cancelled {
+.status-badge.on-the-way {
   background: #ffe8dc;
   color: #b8441d;
 }
 .status-badge.preparing {
   background: #fffcdc;
   color: #b8441d;
+}
+.no-orders-message{
+  text-align: center;
 }
 
 @media (max-width: 1024px) {
