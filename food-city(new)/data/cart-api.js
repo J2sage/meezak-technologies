@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../env.js';
+import { withLoading } from './loading.js';
 
 const apiBaseUrl = API_BASE_URL.replace(/\/$/, '');
 
@@ -6,14 +7,14 @@ async function cartRequest(path, options = {}) {
   const token = localStorage.getItem('authToken');
   if (!token) throw new Error('Please log in before using your cart.');
 
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await withLoading(() => fetch(`${apiBaseUrl}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
       ...(options.headers || {})
     }
-  });
+  }));
 
   const data = response.status === 204 ? null : await response.json();
   if (!response.ok) throw new Error(data?.message || 'Cart request failed');

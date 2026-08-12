@@ -1,6 +1,7 @@
 import { getProduct } from "../Menu_page/script/food.js";
 import { cart } from "../Menu_page/cart_page/renderOrder.js";
 import { getMyOrdersFromApi } from "../data/orders-api.js";
+import { getReviewsFromApi } from "../data/reviews-api.js";
 
 function getCurrentOrder() {
   // API order cache: the source of truth is loaded by loadLatestOrder().
@@ -15,13 +16,53 @@ function getCurrentOrder() {
 
 async function loadLatestOrder() {
   try {
-    const orders = await getMyOrdersFromApi({ limit: 1 });
+    const [orders, reviewsResponse] = await Promise.all([
+      getMyOrdersFromApi(),
+      getReviewsFromApi()
+    ]);
     if (orders[0]) localStorage.setItem('currentOrder', JSON.stringify(orders[0]));
+    updateStatGrid(orders, reviewsResponse);
     updateDashboard();
     updateOrder();
   } catch (error) {
     console.error(error.message);
   }
+}
+
+function setText(selector, value) {
+  const element = document.querySelector(selector);
+  if (element) element.textContent = value;
+}
+
+function updateStatGrid(orders = [], reviewsResponse = []) {
+  const reviews = Array.isArray(reviewsResponse)
+    ? reviewsResponse
+    : reviewsResponse.reviews || reviewsResponse.data || [];
+  const thisWeek = orders.filter((order) => {
+    const placedAt = new Date(order.createdAt);
+    return !Number.isNaN(placedAt) && Date.now() - placedAt.getTime() <= 7 * 24 * 60 * 60 * 1000;
+  }).length;
+  const itemCounts = new Map();
+  orders.forEach((order) => order.items?.forEach((item) => {
+    const name = item.name || 'Menu item';
+    itemCounts.set(name, (itemCounts.get(name) || 0) + Number(item.quantity || 0));
+  }));
+  const [favoriteName, favoriteCount] = [...itemCounts.entries()]
+    .sort(([, a], [, b]) => b - a)[0] || ['No orders yet', 0];
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  const earnedPoints = orders.reduce((sum, order) => sum + Number(order.rewardPoints || order.pointsEarned || 0), 0);
+  const rewards = Number(currentUser?.rewardPoints ?? currentUser?.points ?? earnedPoints);
+  const averageRating = reviews.length
+    ? reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / reviews.length
+    : 0;
+
+  setText('.orders-value', orders.length.toLocaleString());
+  setText('.orders-extra', `${thisWeek} this week`);
+  setText('.favorites-value', favoriteCount.toLocaleString());
+  setText('.favorites-extra', favoriteName);
+  setText('.rewards-value', rewards.toLocaleString());
+  setText('.rating-value', averageRating ? averageRating.toFixed(1) : '—');
+  setText('.rating-extra', averageRating ? 'out of 5' : 'No ratings yet');
 }
 
 function getOrderItems() {
@@ -54,7 +95,8 @@ export function updateDashboard() {
   const orderStatusElement = document.querySelector('.order-status');
   const orderDateElement = document.querySelector('.order-date');
   const orderIdElement = document.querySelector('.order-id');
-  if (orderStatusElement, orderDateElement, orderIdElement) {
+
+  if (orderStatusElement && orderDateElement && orderIdElement) {
     orderStatusElement.innerHTML = `${currentOrder?.status ?? ''}`;
     orderIdElement.innerHTML = `${currentOrder?.id ?? ''}`;
     orderDateElement.innerHTML = `${currentOrder?.createdAt ?? ''}`;
@@ -62,7 +104,7 @@ export function updateDashboard() {
 
   const orderItems = getOrderItems();
   let dashboardHTML = "";
-  let finalTotal = 0;
+  let itemsSubtotal = 0;
 
   orderItems.forEach((item) => {
     const itemPrice = item.price * item.quantity;
@@ -74,18 +116,35 @@ export function updateDashboard() {
         <p class="item-price">₦${itemPrice.toLocaleString()}</p>
       </li>
     `;
-    finalTotal += itemPrice;
+    itemsSubtotal += itemPrice;
   });
+
+  const tax = itemsSubtotal * 0.1;
+  const shipping = itemsSubtotal > 10000 || itemsSubtotal <= 0 ? 0 : 1000;
+
+  // The backend total includes tax and shipping; use it whenever it is available.
+  const finalTotal = Number(currentOrder?.total ?? (itemsSubtotal + tax + shipping));
+
+  
+
 
   const container = document.querySelector(".item-list");
   if (container) {
     container.innerHTML = dashboardHTML || '<li class="empty-state">No active order yet.</li>';
   }
 
-  const totalElement = document.querySelector(".totalPElement");
-  if (totalElement) {
-    totalElement.innerHTML = `₦${finalTotal.toLocaleString()}`;
-  }
+  const updateCurrencyField = (selector, value) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      // textContent is safer and faster than innerHTML for plain text
+      element.textContent = `₦${value.toLocaleString()}`; 
+    }
+  };
+
+  // Clean, readable usage
+  updateCurrencyField(".shippingPElement", shipping);
+  updateCurrencyField(".taxPElement", tax);
+  updateCurrencyField(".totalPElement", (finalTotal + tax + shipping));
 }
 
 export function updateOrder() {

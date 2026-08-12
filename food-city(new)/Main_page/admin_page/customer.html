@@ -36,7 +36,7 @@
       <button class="sidebar-close" type="button" aria-label="Close sidebar">
         <ion-icon name="close"></ion-icon>
       </button>
-      <a href="../../Main_page/index.html"><img src="../../Main_page/assets/foodcity-logo.png" alt="Food City Logo" class="logo"></a>
+      <a href="../../index.html"><img src="../../Main_page/assets/foodcity-logo.png" alt="Food City Logo" class="logo"></a>
       <ul>
         <li><a href="admin.html"><ion-icon name="pie"></ion-icon><span>Dashboard</span></a></li>
         <li><a href="menu.html"><ion-icon name="restaurant"></ion-icon><span>Menu Items</span></a></li>
@@ -87,6 +87,19 @@
       </section>
     </section>
   </main>
+
+  <div class="modal-backdrop" id="delete-customer-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="delete-customer-title">
+    <div class="confirm-modal">
+      <button type="button" class="modal-close js-cancel-delete" aria-label="Close confirmation dialog"><ion-icon name="close"></ion-icon></button>
+      <div class="modal-icon"><ion-icon name="trash"></ion-icon></div>
+      <h2 id="delete-customer-title">Delete customer account?</h2>
+      <p>This will permanently delete <strong class="js-delete-customer-name"></strong>. This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel js-cancel-delete">No, keep account</button>
+        <button type="button" class="modal-confirm js-confirm-delete">Yes, delete</button>
+      </div>
+    </div>
+  </div>
 
   <script src="admin-sidebar.js" defer></script>
   <script src="script/admin_customer.js" type="module" defer></script>

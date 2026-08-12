@@ -1,3 +1,5 @@
+import { createReviewWithApi, getReviewsFromApi } from '../data/reviews-api.js';
+
 const sideBar = document.getElementsByClassName('ham')[0];
 const menuBtn = document.getElementsByClassName('sidebar-control')[0];
 const menu = document.getElementById('menu');
@@ -51,71 +53,84 @@ if (reviewSection) {
 
 
 
-// additional-comment-control
-const fullName = document.getElementsByClassName('F-name')[0];
-const extraComment = document.getElementsByClassName('extra-comment')[0];
-const additonalArray = JSON.parse(localStorage.getItem('additionalArray')) ||[];
-// const additonalArray = [];
-const profile = fullName?.value?.trim()?.[0] ?? "";
-updateComment();
-
+// Additional comments are stored and retrieved through the reviews API.
+const fullName = document.querySelector('.F-name');
+const extraComment = document.querySelector('.extra-comment');
+const reviewRating = document.querySelector('.review-rating');
+const additionalReviews = document.querySelector('.additional');
 const postBtn = document.querySelector('.post_btn');
+const commentOverlay = document.querySelector('.comment-overlay');
+
+function escapeHtml(value = '') {
+  const element = document.createElement('div');
+  element.textContent = value;
+  return element.innerHTML;
+}
+
+function starCount(rating) {
+  // Ratings from 1.0–1.9 show one star, 2.0–2.9 show two, and so on.
+  return Math.min(5, Math.max(1, Math.floor(Number(rating))));
+}
+
+function reviewAuthor(review) {
+  return review.fullName || review.name || review.user?.name || review.user?.fullName || 'Food City customer';
+}
+
+function renderReviews(data) {
+  if (!additionalReviews) return;
+  const reviews = Array.isArray(data) ? data : data.reviews || data.data || [];
+
+  additionalReviews.innerHTML = reviews.map(review => {
+    const author = reviewAuthor(review);
+    const stars = '<span><img src="Main_page/assets/star-icon.svg" alt="star"></span>'.repeat(starCount(review.rating));
+    return `
+      <div class="comment-section">
+        <div class="profile-comm">
+          <div class="profile-name">${escapeHtml(author.trim().charAt(0).toUpperCase())}</div>
+          <p>${escapeHtml(author)}</p>
+        </div>
+        <div class="textarea">
+          <div class="rating" aria-label="${starCount(review.rating)} out of 5 stars">${stars}</div>
+          <div class="comment"><p>${escapeHtml(review.comment || review.content || '')}</p></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function loadReviews() {
+  try {
+    renderReviews(await getReviewsFromApi());
+  } catch (error) {
+    console.error('Could not load reviews:', error);
+  }
+}
+
 if (postBtn) {
-  postBtn.addEventListener('click', () => {
-    if(fullName.value !== '' &&  extraComment.value !== ''){
-      const profile = fullName.value.trim()[0] || '';
-      additonalArray.push({
-        fullName: fullName.value,
-        comment: extraComment.value,
-        profile: profile
-      });
-      saveToStorage(additonalArray);
-      updateComment();
+  postBtn.addEventListener('click', async () => {
+    const name = fullName.value.trim();
+    const comment = extraComment.value.trim();
+    const rating = Number(reviewRating.value);
+
+    if (!name || !comment || !Number.isFinite(rating) || rating < 1 || rating > 5) {
+      alert('Enter your name, comment, and a rating from 1.0 to 5.0.');
+      return;
+    }
+
+    try {
+      postBtn.disabled = true;
+      await createReviewWithApi({ comment, rating });
       fullName.value = '';
       extraComment.value = '';
+      reviewRating.value = '';
+      await loadReviews();
+      commentOverlay.style.display = 'flex';
+      setTimeout(() => { commentOverlay.style.display = 'none'; }, 3000);
+    } catch (error) {
+      alert(error.message || 'Could not post your review. Please try again.');
+    } finally {
+      postBtn.disabled = false;
     }
-    document.querySelector('.comment-overlay').style.display = 'flex';
-    setTimeout(() => {
-      document.querySelector('.comment-overlay').style.display = 'none';
-    }, 3000);
-  })
-};
-
-function updateComment(){
-  if (additonalArray.length === 0) {
-    const element = document.querySelector('.additional');
-    if (element) {
-      element.innerHTML = '';
-    }
-    return;
-  }
-
-  let addtionalHTML = '';
-  const lastItem = additonalArray.at(-1);
-  addtionalHTML += `
-    <div class="comment-section">
-      <div class="profile-comm">
-        <div class="profile-name">${lastItem.profile || ''}</div>
-        <p>${lastItem.fullName || ''}</p>
-      </div>
-      <div class="textarea">
-        <div class="rating">
-          <span> <img src="assets/star-icon.svg" alt=""></span>
-          <span> <img src="assets/star-icon.svg" alt=""></span>
-          <span> <img src="assets/star-icon.svg" alt=""></span>
-          <span> <img src="assets/star-icon.svg" alt=""></span>
-          <span> <img src="assets/star-icon.svg" alt=""></span>
-        </div>
-        <div class="comment">
-          <p>${lastItem.comment || ''}</p>
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.querySelector('.additional').innerHTML = addtionalHTML;
+  });
 }
 
-function saveToStorage(params) {
-  localStorage.setItem('additionalArray', JSON.stringify(params));
-}
+loadReviews();

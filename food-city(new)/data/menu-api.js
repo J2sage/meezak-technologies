@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../env.js';
+import { withLoading } from './loading.js';
 
 const apiBaseUrl = API_BASE_URL.replace(/\/$/, '');
 
@@ -10,7 +11,7 @@ export async function getMenuFromApi({ q = '', category = '' } = {}) {
   if (q.trim()) url.searchParams.set('q', q.trim());
   if (category.trim()) url.searchParams.set('category', category.trim());
 
-  const response = await fetch(url);
+  const response = await withLoading(() => fetch(url));
   const data = await response.json();
 
   if (!response.ok) {
@@ -24,14 +25,14 @@ async function adminMenuRequest(path, options = {}) {
   const token = localStorage.getItem('authToken');
   if (!token) throw new Error('Please log in as an admin first.');
 
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await withLoading(() => fetch(`${apiBaseUrl}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
       ...(options.headers || {})
     }
-  });
+  }));
   const data = await response.json();
   if (!response.ok) throw new Error(data?.message || 'Menu request failed');
   return data;

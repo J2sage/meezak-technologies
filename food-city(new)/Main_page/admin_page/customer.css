@@ -272,6 +272,12 @@ td {
 .action-buttons button:hover {
   background: #e2e8f0;
 }
+.action-buttons .delete-customer {
+  color: #b91c1c;
+}
+.action-buttons .delete-customer:hover {
+  background: #fee2e2;
+}
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -300,6 +306,73 @@ td {
   background: #fee2e2;
   color: #475569;
 }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, .55);
+}
+.modal-backdrop.is-open { display: flex; }
+.confirm-modal {
+  position: relative;
+  width: min(100%, 430px);
+  padding: 32px;
+  text-align: center;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, .25);
+}
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 1.7rem;
+}
+.confirm-modal h2 { margin-bottom: 10px; color: #0f172a; }
+.confirm-modal p { color: #64748b; font-size: 14px; }
+.modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 24px; }
+.modal-actions button { padding: 11px 16px; border-radius: 9px; font-weight: 600; cursor: pointer; }
+.modal-cancel { border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; }
+.modal-confirm { border: 1px solid #b91c1c; background: #b91c1c; color: white; }
+.modal-confirm:disabled { opacity: .6; cursor: wait; }
+.loading-cell {
+  padding: 32px !important;
+  text-align: center;
+  color: #64748b;
+}
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 7px;
+  vertical-align: -3px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: loading-spin .7s linear infinite;
+}
+button:disabled { cursor: wait; opacity: .7; }
+@keyframes loading-spin { to { transform: rotate(360deg); } }
 @media (max-width: 1024px) {
   .side-bar {
     width: 220px;

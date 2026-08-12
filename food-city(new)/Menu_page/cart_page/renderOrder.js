@@ -171,8 +171,18 @@ if (document.readyState !== "loading") {
    The backend creates the order from the authenticated user's API cart,
    clears that cart, and awards reward points.
 */
+function getOrderTotals() {
+  const subtotal = cart.reduce((sum, cartItem) => {
+    const product = getCartProduct(cartItem);
+    return sum + (product ? product.price * cartItem.quantity : 0);
+  }, 0);
+  const tax = subtotal * 0.1;
+  const shipping = subtotal > 10000 || subtotal <= 0 ? 0 : 1000;
+  return { subtotal, tax, shipping, total: subtotal + tax + shipping };
+}
+
 async function checkoutWithApi() {
-  const result = await checkoutOrderWithApi();
+  const result = await checkoutOrderWithApi(getOrderTotals());
   localStorage.setItem('currentOrder', JSON.stringify(result.order));
   return result.order;
 }
@@ -365,7 +375,7 @@ function sendOrderToWhatsapp(){
     return;
   }
   
-  let message = `Hello, I would like to place an order:\n\nOrder ID: ${order.id}\nCustomer Name: ${order.customerName}\nEmail: ${order.email}\n\nItems:\n`;
+  let message = `Hello, I would like to place an order:\n\nOrder ID: ${order.id}\nCustomer Name: ${order.userName}\nID: ${order.userId}\n\nItems:\n`;
 
   order.items.forEach((item) => {
     message += `- ${item.name} (Quantity: ${item.quantity}, Price: ₦${item.price.toLocaleString()})\n`;

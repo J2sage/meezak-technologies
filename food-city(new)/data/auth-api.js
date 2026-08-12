@@ -2,6 +2,7 @@
 // API AUTH INTEGRATION
 // ============================================================
 import { API_BASE_URL } from '../env.js';
+import { withLoading } from './loading.js';
 
 const apiBaseUrl = API_BASE_URL.replace(/\/$/, '');
 
@@ -18,7 +19,7 @@ function mapApiUserToFrontend(user) {
 }
 
 export async function registerUserWithApi({ fullName, email, phoneNumber, password }) {
-  const response = await fetch(`${apiBaseUrl}/auth/register`, {
+  const response = await withLoading(() => fetch(`${apiBaseUrl}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -29,7 +30,7 @@ export async function registerUserWithApi({ fullName, email, phoneNumber, passwo
       phone: phoneNumber,
       password
     })
-  });
+  }));
 
   const data = await response.json();
 
@@ -44,13 +45,13 @@ export async function registerUserWithApi({ fullName, email, phoneNumber, passwo
 }
 
 export async function loginUserWithApi({ email, password }) {
-  const response = await fetch(`${apiBaseUrl}/auth/login`, {
+  const response = await withLoading(() => fetch(`${apiBaseUrl}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ email, password })
-  });
+  }));
 
   const data = await response.json();
 
@@ -68,14 +69,14 @@ async function authRequest(path, body) {
   const token = localStorage.getItem('authToken');
   if (!token) throw new Error('Please log in first.');
 
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await withLoading(() => fetch(`${apiBaseUrl}${path}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(body)
-  });
+  }));
 
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || 'Request failed');

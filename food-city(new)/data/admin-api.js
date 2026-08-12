@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../env.js';
+import { withLoading } from './loading.js';
 
 const apiBaseUrl = API_BASE_URL.replace(/\/$/, '');
 
@@ -6,16 +7,28 @@ async function adminRequest(path, options = {}) {
   const token = localStorage.getItem('authToken');
   if (!token) throw new Error('Please log in as an admin first.');
 
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await withLoading(() => fetch(`${apiBaseUrl}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
       ...(options.headers || {})
     }
-  });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data?.message || 'Admin request failed');
+  }));
+  const contentType = response.headers.get('content-type') || '';
+  const rawBody = response.status === 204 ? '' : await response.text();
+  let data = null;
+  if (rawBody && contentType.includes('application/json')) {
+    try {
+      data = JSON.parse(rawBody);
+    } catch {
+      data = null;
+    }
+  }
+  if (!response.ok) {
+    const serverMessage = data?.message || (rawBody && !contentType.includes('text/html') ? rawBody : '');
+    throw new Error(serverMessage || `Admin request failed (${response.status})`);
+  }
   return data;
 }
 
@@ -51,4 +64,8 @@ export function updateCustomerActive(customerId, active) {
     method: 'PATCH',
     body: JSON.stringify({ active })
   });
+}
+
+export function deleteCustomer(customerId) {
+  return adminRequest(`/customers/${customerId}`, { method: 'DELETE' });
 }

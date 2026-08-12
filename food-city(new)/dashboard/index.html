@@ -16,10 +16,10 @@
     <button class="sidebar-close" type="button" aria-label="Close sidebar">
       <ion-icon name="close"></ion-icon>
     </button>
-    <a href="../../Main_page/index.html"><img src="../Main_page/assets/foodcity-logo.png" alt="Food City Logo" class="logo"></a>
+    <a href="../index.html"><img src="../Main_page/assets/foodcity-logo.png" alt="Food City Logo" class="logo"></a>
     <ul>
       <li><a href="#dashboard" class="active"><ion-icon name="menu"></ion-icon><span>Dashboard</span></a></li>
-      <li><a href="../Main_page/index.html"><ion-icon name="home"></ion-icon><span>Back to home</span></a></li>
+      <li><a href="../index.html"><ion-icon name="home"></ion-icon><span>Back to home</span></a></li>
       <li><a href="../Menu_page/index.html"><ion-icon name="grid"></ion-icon><span>Menu</span></a></li>
       <li><a href="order_page/order.html"><ion-icon name="cart"></ion-icon><span>Orders</span></a></li>
       <li><a href="profile_page/profile.html"><ion-icon name="person"></ion-icon><span>Profile</span></a></li>
@@ -48,23 +48,23 @@
     <section class="stat-grid">
       <div class="card">
         <p class="card-title"><ion-icon name="time"></ion-icon> Orders</p>
-        <h2 class="card-value">12</h2>
-        <p class="extra">+2 this week</p>
+        <h2 class="card-value orders-value">—</h2>
+        <p class="extra orders-extra">Loading…</p>
       </div>
       <div class="card">
         <p class="card-title"><ion-icon name="heart"></ion-icon> Favorites</p>
-        <h2 class="card-value">8</h2>
-        <p class="extra">Fried Rice</p>
+        <h2 class="card-value favorites-value">—</h2>
+        <p class="extra favorites-extra">Loading…</p>
       </div>
       <div class="card">
         <p class="card-title"><ion-icon name="pricetag"></ion-icon> Rewards</p>
-        <h2 class="card-value">1,280</h2>
-        <p class="extra">points</p>
+        <h2 class="card-value rewards-value">—</h2>
+        <p class="extra rewards-extra">points</p>
       </div>
       <div class="card">
         <p class="card-title"><ion-icon name="star"></ion-icon> Rating</p>
-        <h2 class="card-value">4.8</h2>
-        <p class="extra">out of 5</p>
+        <h2 class="card-value rating-value">—</h2>
+        <p class="extra rating-extra">out of 5</p>
       </div>
 
     </section>
@@ -83,15 +83,11 @@
         <div class="order-items">
           <p>Items:</p>
           <ul class="item-list">
-            <!-- <li>
-              <div class="item-left">
-                <img src="../Menu_page/assets/foodcard2.webp" alt="Chicken Wings"> City's Special Rice <span item-quantity>x2</span>
-              </div>
-              <p class="item-price">$15.00</p>
-            </li> -->
           </ul>
         </div>
         <div class="order-total">
+          <p>Tax: <span class="taxPElement">₦0</span></p>
+          <p>Shipping: <span class="shippingPElement">₦0</span></p>
           <p>Total: <span class="totalPElement"></span></p>
         </div>
       </div>

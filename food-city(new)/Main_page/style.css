@@ -463,7 +463,8 @@ main{
   font-size: 1em;
   margin-bottom: 10px;
 }
-.extra-comment{
+.extra-comment,
+.review-rating{
   width: 100%;
   padding: 15px 2% 10px;
   font-size: 1.2em;
@@ -474,7 +475,8 @@ main{
 .add input:focus{
   animation: borderPulse 2s infinite ease-in-out;
 }
-.extra-comment:focus{
+.extra-comment:focus,
+.review-rating:focus{
   animation: borderPulse 2s infinite ease-in-out;
 }
 @keyframes borderPulse {
