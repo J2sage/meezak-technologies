@@ -4,7 +4,8 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 400px;
-	height: 450px;
+	max-height: 500px;
+	height: 100vh;
 	background-color: orangered;
 	border-radius: 10px;
 	display: none;

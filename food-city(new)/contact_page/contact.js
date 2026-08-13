@@ -11,6 +11,10 @@ if(nameElement && emailElement && messageElement && submitButton){
     { 
       e.preventDefault();
       sendToMail(nameElement.value, emailElement.value, messageElement.value); 
+
+      nameElement.value = '';
+      emailElement.value = '';
+      messageElement.value = '';
     } else {
       showAlertModal('Error', 'Please fill in all fields.', 'person-add-outline');
     }
@@ -18,7 +22,7 @@ if(nameElement && emailElement && messageElement && submitButton){
 }
 
 function sendToMail(name, email, messages){ 
-  const myGmail = 'jibrilbalogun15@gmail.com'; 
+  const recipent = 'jibrilbalogun15@gmail.com'; 
   
   let message = `Name: \n${name}\n`; 
   message += `------------\n`; 
@@ -31,7 +35,7 @@ function sendToMail(name, email, messages){
   const subject = encodeURIComponent("New Contact Form Submission");
   
   
-  const gmailUrl = `https://google.com${myGmail}&su=${subject}&body=${encodedMessage}`;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipent}&su=${subject}&body=${encodedMessage}`;
   
   window.open(gmailUrl, '_blank');
 }
