@@ -1,3 +1,4 @@
+import { showAlertModal  } from "../login.js";
 const nameElement = document.getElementById('name');
 const emailElement = document.getElementById('email');
 const messageElement = document.getElementById('message');
@@ -11,27 +12,26 @@ if(nameElement && emailElement && messageElement && submitButton){
       e.preventDefault();
       sendToMail(nameElement.value, emailElement.value, messageElement.value); 
     } else {
-      alert('Please fill in all fields');
+      showAlertModal('Error', 'Please fill in all fields.', 'person-add-outline');
     }
   })
 }
 
-function sendToMail(name, email, messages){
-  const mail = 'jibrilbalogun15@gmail.com';
-
-  let message = `Name: \n`;
-  message+= `${name}\n`;
-  message+=`------------`;
-  message+= `Email\n`;
-  message+= `${email}\n`;
-  message+=`---------`;
-  message+= `Message\n`;
-  message+= `${messages}\n`;
-  message+=`---------`;
-
+function sendToMail(name, email, messages){ 
+  const myGmail = 'jibrilbalogun15@gmail.com'; 
+  
+  let message = `Name: \n${name}\n`; 
+  message += `------------\n`; 
+  message += `Email:\n${email}\n`; 
+  message += `---------\n`; 
+  message += `Message:\n${messages}\n`; 
+  message += `---------`; 
   
   const encodedMessage = encodeURIComponent(message);
   const subject = encodeURIComponent("New Contact Form Submission");
   
-  window.location.href = `mailto:${mail}?subject=${subject}&body=${encodedMessage}`;
+  
+  const gmailUrl = `https://google.com${myGmail}&su=${subject}&body=${encodedMessage}`;
+  
+  window.open(gmailUrl, '_blank');
 }
