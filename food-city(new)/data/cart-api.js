@@ -1,11 +1,19 @@
 import { API_BASE_URL } from '../env.js';
 import { withLoading } from './loading.js';
+import { showAlertModal, openLoginModal } from '../login.js';
 
 const apiBaseUrl = API_BASE_URL.replace(/\/$/, '');
 
 async function cartRequest(path, options = {}) {
   const token = localStorage.getItem('authToken');
-  if (!token) throw new Error('Please log in before using your cart.');
+  if (!token) {
+    showAlertModal('Authentication Required', 'Please log in before using your cart.', 'cart-outline');
+    document.querySelector('.alert-btn')?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      openLoginModal();
+    });
+    return; // 2. Stop execution here
+  }
 
   const response = await withLoading(() => fetch(`${apiBaseUrl}${path}`, {
     ...options,

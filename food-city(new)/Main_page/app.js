@@ -1,4 +1,5 @@
 import { createReviewWithApi, getReviewsFromApi } from '../data/reviews-api.js';
+import { openLoginModal, showAlertModal } from '../login.js';
 
 const sideBar = document.getElementsByClassName('ham')[0];
 const menuBtn = document.getElementsByClassName('sidebar-control')[0];
@@ -112,7 +113,7 @@ if (postBtn) {
     const rating = Number(reviewRating.value);
 
     if (!name || !comment || !Number.isFinite(rating) || rating < 1 || rating > 5) {
-      alert('Enter your name, comment, and a rating from 1.0 to 5.0.');
+      showAlertModal('Error', 'Enter your name, comment, and a rating from 1.0 to 5.0.', 'person-add-outline') 
       return;
     }
 
@@ -126,7 +127,11 @@ if (postBtn) {
       commentOverlay.style.display = 'flex';
       setTimeout(() => { commentOverlay.style.display = 'none'; }, 3000);
     } catch (error) {
-      alert(error.message || 'Could not post your review. Please try again.');
+      showAlertModal('Error', 'Could not post your review, Please Log in.', 'person-add-outline');
+      document.querySelector('.alert-btn')?.addEventListener('click', (e)=>{
+        e.preventDefault();
+        openLoginModal();
+      });
     } finally {
       postBtn.disabled = false;
     }

@@ -375,17 +375,31 @@ function sendOrderToWhatsapp(){
     return;
   }
   
-  let message = `Hello, I would like to place an order:\n\nOrder ID: ${order.id}\nCustomer Name: ${order.userName}\nID: ${order.userId}\n\nItems:\n`;
+  const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  
+  const tax = subtotal * 0.1;
+  const shipping = subtotal > 10000 || subtotal <= 0 ? 0 : 1000;
+  const grandTotal = subtotal + tax + shipping;
+
+  let message = `Hello, I would like to place an order:\n\n`;
+  message += `Order ID: ${order.id}\n`;
+  message += `Customer Name: ${order.userName || "Customer"}\n`;
+  message += `ID: ${order.userId || "N/A"}\n\n`;
+  message += `Items:\n`;
 
   order.items.forEach((item) => {
     message += `- ${item.name} (Quantity: ${item.quantity}, Price: ₦${item.price.toLocaleString()})\n`;
   });
-  message += `\nTotal: ₦${order.total.toLocaleString()}`;
+
+  message += `\nSubtotal: ₦${subtotal.toLocaleString()}`;
+  message += `\nTax (10%): ₦${tax.toLocaleString()}`;
+  message += `\nShipping: ₦${shipping.toLocaleString()}`;
+  message += `\nTotal Amount: ₦${grandTotal.toLocaleString()}\n`;
 
   message += `\nPlease confirm my order and send payment details.`;
 
   console.log(message);
   const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+  const whatsappUrl = `https://wa.me{whatsappNumber}?text=${encodedMessage}`;
   window.open(whatsappUrl, "_blank");
 }

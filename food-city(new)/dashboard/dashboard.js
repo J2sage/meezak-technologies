@@ -95,11 +95,29 @@ export function updateDashboard() {
   const orderStatusElement = document.querySelector('.order-status');
   const orderDateElement = document.querySelector('.order-date');
   const orderIdElement = document.querySelector('.order-id');
+  const progressBar = document.getElementById('file');
 
   if (orderStatusElement && orderDateElement && orderIdElement) {
     orderStatusElement.innerHTML = `${currentOrder?.status ?? ''}`;
     orderIdElement.innerHTML = `${currentOrder?.id ?? ''}`;
     orderDateElement.innerHTML = `${currentOrder?.createdAt ?? ''}`;
+  }
+
+  if (progressBar && currentOrder && currentOrder.status) {
+  // Convert status to lowercase to safely match any backend formatting
+  const status = currentOrder.status.toLowerCase();
+
+  if (status === 'confirmed') {
+      progressBar.value = 25;
+    } else if (status === 'being_prepared') {
+      progressBar.value = 50;
+    } else if (status === 'on_the_way' || status === 'on the way') { 
+      progressBar.value = 75;
+    } else if (status === 'delivered' || status === 'completed') {
+      progressBar.value = 100;
+    } else {
+      progressBar.value = 0; 
+    }
   }
 
   const orderItems = getOrderItems();

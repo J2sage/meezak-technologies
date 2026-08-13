@@ -120,6 +120,7 @@ main{
 .no-scroll{
   overflow: hidden;
   pointer-events: none;
+  z-index: 1000;
 }
 .show{
   position: fixed;

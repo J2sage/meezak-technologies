@@ -6,7 +6,7 @@ const logInBox = document.querySelector('.login-box');
 const backdrop = document.querySelector('.remove-container-backdrop');
 const menuLink = document.getElementById('menu-link');
 
-// 1. Inject HTML with both Login and Register structures built-in
+
 if (logInBox) {
   logInBox.innerHTML = `
       <!-- LOGIN FORM CONTAINER -->
@@ -103,7 +103,7 @@ function showLoginPanel() {
   logInBox.querySelector('.register-form-wrapper').style.display = 'none';
 }
 
-function openLoginModal() {
+export function openLoginModal() {
   if (logInBox) {
     showLoginPanel(); // Reset view to login when opened
     logInBox.style.display = 'flex';
@@ -189,6 +189,7 @@ function createAccountLocalStorage(event) {
 
    Mapping: form fullName -> API name -> API user.name -> frontend fullName
 */
+
 async function createAccount(event) {
   event?.preventDefault();
   if (!logInBox) return;
@@ -315,7 +316,12 @@ async function logIn(event) {
     renderInfo(user);
     redirectBasedOnRole(user);
   } catch (error) {
-    alert(error.message || 'Login failed. Please try again.');
+    if (error.message?.toLowerCase().includes('not found') || error.message?.toLowerCase().includes('exist')) {
+      showAlertModal('Account Not Found', 'This account does not exist. Please check your credentials or register an account.', 'person-add-outline');
+    } else {
+      showAlertModal('Login Failed', error.message || 'Invalid email or password combination.', 'lock-open-outline');
+    }
+
   }
 }
 
@@ -378,3 +384,36 @@ export function updateProfile({ fullName, email, phoneNumber, password }) {
   updatedashBoardLabel(updatedUser);
   return updatedUser;
 }
+
+
+
+// Dynamic Global Alert Modal Trigger
+export function showAlertModal(title, message, iconName = 'alert-circle') {
+  
+  if (document.querySelector('.alert-modal-wrapper')) return;
+
+  backdrop?.classList.add('show');
+  document.body.classList.add('no-scroll');
+
+  const alertContainer = document.createElement('div');
+  alertContainer.className = 'alert-modal-wrapper';
+  alertContainer.innerHTML = `
+    <ion-icon name="${iconName}"></ion-icon>
+    <h3>${title}</h3>
+    <p>${message}</p>
+    <button class="alert-btn">OK</button>
+  `;
+
+  alertContainer.querySelector('.alert-btn').addEventListener('click', () => {
+    alertContainer.remove();
+    if (logInBox && logInBox.style.display === 'flex') {
+      closeLoginModal(); 
+    } else {
+      backdrop?.classList.remove('show');
+      document.body.classList.remove('no-scroll');
+    }
+  });
+
+  document.body.appendChild(alertContainer);
+}
+
